@@ -1,0 +1,33 @@
+{
+  "fixture": "CLEAR_OCT01",
+  "description": "1 October 2026: $562 is in force and every material fact is entailed.",
+  "case_file": "fixtures/cases/case_income_stated.txt",
+  "expect_verdict": "CLEAR",
+  "action": {
+    "action_id": "clear_oct01",
+    "action": "pay",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-01",
+    "amount": 562,
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 2,
+        "span": "Two people live together and buy and prepare food together"
+      },
+      {
+        "name": "monthly_net_income",
+        "value": 0,
+        "rule": "closure_no_income"
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment_48dc_hh2",
+        "value": 562,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      }
+    ]
+  }
+}

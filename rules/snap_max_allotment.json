@@ -1,0 +1,71 @@
+{
+  "rulebook": "snap-max-allotment-48-states-dc",
+  "rulebook_version": "1",
+  "scope": {
+    "program": "SNAP",
+    "region": "48 contiguous States and the District of Columbia",
+    "household_size": 2,
+    "note": "One path only: federal maximum monthly allotment, household of 2, 48 States and D.C."
+  },
+  "authority": {
+    "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u)(2)(B) and (u)(3)(C); 7 U.S.C. 2017(a)",
+    "what_it_establishes": "The statute sets how the maximum allotment is derived: a 2-person household receives 55 percent of the maximum 4-person allotment, the thrifty food plan cost is adjusted each October 1, and the allotment is that cost reduced by 30 percent of household income, rounded down. The statute does not state any dollar figure. The dollar figures below are USDA's, taken from the documents cited for each value.",
+    "quotes": [
+      {"cite": "7 U.S.C. 2012(u)(2)(B)", "text": "For a 2-person household, 55 percent."},
+      {"cite": "7 U.S.C. 2012(u)(3)(C)", "text": "on October 1, 2025, and on each October 1 thereafter, adjust the cost of the thrifty food plan to reflect changes in the Consumer Price Index for All Urban Consumers"},
+      {"cite": "7 U.S.C. 2017(a)", "text": "shall be equal to the cost to such households of the thrifty food plan reduced by an amount equal to 30 per centum of the household's income"}
+    ],
+    "retrieved": "2026-09-25",
+    "retrieved_from": "uscode.house.gov, preliminary edition"
+  },
+  "parameters": {
+    "max_allotment_48dc_hh2": {
+      "unit": "USD per month",
+      "versions": [
+        {
+          "value": 546,
+          "effective_from": "2025-10-01",
+          "effective_to": "2026-09-30",
+          "source": {
+            "id": "usda-fns-snap-fy2026-maximum-allotments",
+            "title": "Supplemental Nutrition Assistance Program (SNAP) Fiscal Year (FY) 2026 Maximum Allotments and Deductions",
+            "publisher": "USDA Food and Nutrition Service",
+            "url": "https://www.fns.usda.gov/sites/default/files/resource-files/snap-fy26maximumAllotments-deductions.pdf",
+            "file": "sources/usda-fns-snap-fy2026-maximum-allotments.pdf",
+            "sha256": "c037d4d6da50c1f3de9f6871b2c8864ab220714fbcd8d4b0da633798b99a0732",
+            "pdf_page": 1,
+            "quote": "The following tables provide the monthly maximum allotment and allowable deductions for FY 2026 (effective October 1, 2025, through September 30, 2026).",
+            "row": "Table 1: Maximum Monthly Allotment, household size 2, 48 States & District of Columbia: $546"
+          }
+        },
+        {
+          "value": 562,
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source": {
+            "id": "usda-fna-snap-cola-fy2027",
+            "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+            "publisher": "USDA Food and Nutrition Administration",
+            "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+            "file": "sources/usda-fna-snap-cola-fy2027.pdf",
+            "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+            "pdf_page": 4,
+            "quote": "MAXIMUM MONTHLY ALLOTMENTS OCTOBER 1, 2026, TO SEPTEMBER 30, 2027",
+            "row": "Maximum SNAP Allotments for 48 States and D.C., household size 2: $562"
+          }
+        }
+      ]
+    }
+  },
+  "material_facts": {
+    "household_size": "Number of people in the SNAP household. Must equal the rulebook's scope (2).",
+    "monthly_net_income": "Household net monthly income in USD. The maximum allotment is the benefit only when this is 0."
+  },
+  "named_rules": {
+    "closure_no_income": {
+      "derives": {"fact": "monthly_net_income", "value": 0},
+      "requires_text": "nobody in the household has any income",
+      "description": "If the case file states that nobody in the household has any income, monthly net income is 0."
+    }
+  }
+}

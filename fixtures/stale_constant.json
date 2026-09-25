@@ -1,0 +1,33 @@
+{
+  "fixture": "STALE_CONSTANT",
+  "description": "1 October 2026 with last year's $546. The number is present in the rulebook but not in force on that date.",
+  "case_file": "fixtures/cases/case_income_stated.txt",
+  "expect_verdict": "STOP",
+  "action": {
+    "action_id": "stale_constant",
+    "action": "pay",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-01",
+    "amount": 546,
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 2,
+        "span": "Two people live together and buy and prepare food together"
+      },
+      {
+        "name": "monthly_net_income",
+        "value": 0,
+        "rule": "closure_no_income"
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment_48dc_hh2",
+        "value": 546,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      }
+    ]
+  }
+}

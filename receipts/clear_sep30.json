@@ -1,0 +1,62 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u)(2)(B) and (u)(3)(C); 7 U.S.C. 2017(a)",
+      "role": "derivation only; states no dollar figure"
+    },
+    "figures": [
+      {
+        "effective_from": "2025-10-01",
+        "effective_to": "2026-09-30",
+        "parameter": "max_allotment_48dc_hh2",
+        "pdf_page": 1,
+        "role": "states the figure in force",
+        "sha256": "c037d4d6da50c1f3de9f6871b2c8864ab220714fbcd8d4b0da633798b99a0732",
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+        "title": "Supplemental Nutrition Assistance Program (SNAP) Fiscal Year (FY) 2026 Maximum Allotments and Deductions",
+        "url": "https://www.fns.usda.gov/sites/default/files/resource-files/snap-fy26maximumAllotments-deductions.pdf",
+        "value": 546
+      }
+    ]
+  },
+  "decision": {
+    "decision_date": "2026-09-30",
+    "findings": [],
+    "verdict": "CLEAR"
+  },
+  "inputs": {
+    "action": {
+      "action": "pay",
+      "action_id": "clear_sep30",
+      "amount": 546,
+      "benefit_month": "2026-09",
+      "decision_date": "2026-09-30",
+      "facts": [
+        {
+          "name": "household_size",
+          "span": "Two people live together and buy and prepare food together",
+          "value": 2
+        },
+        {
+          "name": "monthly_net_income",
+          "rule": "closure_no_income",
+          "value": 0
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "max_allotment_48dc_hh2",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "value": 546
+        }
+      ],
+      "program": "SNAP"
+    },
+    "case_file_sha256": "fd92d9290ed1b187ab202fa9db65d820f4b7b09edc7d6fc00e00c03f9b87f86e",
+    "rulebook_sha256": "b4e40474e0020a7db6fe165ed294188df7b9a2f23d2db1b8f3813a5e4105cecd"
+  },
+  "receipt_schema": "asof-gate/receipt/1",
+  "receipt_sha256": "b0cb7510717b21b2e1f46c9692a3fb2dd0d6059b0b0e59fac5c432e5ad8d746c",
+  "rulebook": "snap-max-allotment-48-states-dc",
+  "rulebook_version": "1"
+}

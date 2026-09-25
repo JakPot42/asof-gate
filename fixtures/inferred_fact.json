@@ -1,0 +1,34 @@
+{
+  "fixture": "INFERRED_FACT",
+  "description": "30 September 2026. Zero income was inferred from zero working hours, and nothing in the case file states either.",
+  "case_file": "fixtures/cases/case_income_unstated.txt",
+  "expect_verdict": "STOP",
+  "action": {
+    "action_id": "inferred_fact",
+    "action": "pay",
+    "program": "SNAP",
+    "benefit_month": "2026-09",
+    "decision_date": "2026-09-30",
+    "amount": 546,
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 2,
+        "span": "Two people live together and buy and prepare food together"
+      },
+      {
+        "name": "monthly_net_income",
+        "value": 0,
+        "span": "",
+        "basis": "inferred from weekly_hours = 0"
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment_48dc_hh2",
+        "value": 546,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      }
+    ]
+  }
+}

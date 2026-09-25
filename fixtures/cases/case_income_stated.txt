@@ -1,0 +1,4 @@
+Case file CF-0001. The household applied for SNAP in California.
+Two people live together and buy and prepare food together: p1, age 34, and p2, age 36.
+Neither p1 nor p2 is working.
+Nobody in the household has any income, and nobody has savings or other assets.

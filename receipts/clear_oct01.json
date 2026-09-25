@@ -1,0 +1,62 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u)(2)(B) and (u)(3)(C); 7 U.S.C. 2017(a)",
+      "role": "derivation only; states no dollar figure"
+    },
+    "figures": [
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "parameter": "max_allotment_48dc_hh2",
+        "pdf_page": 4,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 562
+      }
+    ]
+  },
+  "decision": {
+    "decision_date": "2026-10-01",
+    "findings": [],
+    "verdict": "CLEAR"
+  },
+  "inputs": {
+    "action": {
+      "action": "pay",
+      "action_id": "clear_oct01",
+      "amount": 562,
+      "benefit_month": "2026-10",
+      "decision_date": "2026-10-01",
+      "facts": [
+        {
+          "name": "household_size",
+          "span": "Two people live together and buy and prepare food together",
+          "value": 2
+        },
+        {
+          "name": "monthly_net_income",
+          "rule": "closure_no_income",
+          "value": 0
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "max_allotment_48dc_hh2",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "value": 562
+        }
+      ],
+      "program": "SNAP"
+    },
+    "case_file_sha256": "fd92d9290ed1b187ab202fa9db65d820f4b7b09edc7d6fc00e00c03f9b87f86e",
+    "rulebook_sha256": "b4e40474e0020a7db6fe165ed294188df7b9a2f23d2db1b8f3813a5e4105cecd"
+  },
+  "receipt_schema": "asof-gate/receipt/1",
+  "receipt_sha256": "0f3afbed977826307704ddf62aa9140609a273146b3d4e28f0201b368616b23b",
+  "rulebook": "snap-max-allotment-48-states-dc",
+  "rulebook_version": "1"
+}

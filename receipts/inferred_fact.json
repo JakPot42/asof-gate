@@ -1,0 +1,71 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u)(2)(B) and (u)(3)(C); 7 U.S.C. 2017(a)",
+      "role": "derivation only; states no dollar figure"
+    },
+    "figures": [
+      {
+        "effective_from": "2025-10-01",
+        "effective_to": "2026-09-30",
+        "parameter": "max_allotment_48dc_hh2",
+        "pdf_page": 1,
+        "role": "states the figure in force",
+        "sha256": "c037d4d6da50c1f3de9f6871b2c8864ab220714fbcd8d4b0da633798b99a0732",
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+        "title": "Supplemental Nutrition Assistance Program (SNAP) Fiscal Year (FY) 2026 Maximum Allotments and Deductions",
+        "url": "https://www.fns.usda.gov/sites/default/files/resource-files/snap-fy26maximumAllotments-deductions.pdf",
+        "value": 546
+      }
+    ]
+  },
+  "decision": {
+    "decision_date": "2026-09-30",
+    "findings": [
+      {
+        "kind": "FACT_NOT_ENTAILED",
+        "message": "monthly_net_income = 0: not entailed (no_span_and_no_rule). To clear, cite text in the case file that contains the value, or a named rule that derives it.",
+        "reason": "no_span_and_no_rule",
+        "subject": "monthly_net_income",
+        "supplied_value": 0
+      }
+    ],
+    "verdict": "STOP"
+  },
+  "inputs": {
+    "action": {
+      "action": "pay",
+      "action_id": "inferred_fact",
+      "amount": 546,
+      "benefit_month": "2026-09",
+      "decision_date": "2026-09-30",
+      "facts": [
+        {
+          "name": "household_size",
+          "span": "Two people live together and buy and prepare food together",
+          "value": 2
+        },
+        {
+          "basis": "inferred from weekly_hours = 0",
+          "name": "monthly_net_income",
+          "span": "",
+          "value": 0
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "max_allotment_48dc_hh2",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "value": 546
+        }
+      ],
+      "program": "SNAP"
+    },
+    "case_file_sha256": "8fe7b726ba8f341679c70b067dd955967e73e6df33ce8b89cf494b52c058f13b",
+    "rulebook_sha256": "b4e40474e0020a7db6fe165ed294188df7b9a2f23d2db1b8f3813a5e4105cecd"
+  },
+  "receipt_schema": "asof-gate/receipt/1",
+  "receipt_sha256": "ce50f74102cf89b84f7fa073f47199e5a7ffe7f5d06fd73073954c314c587fb1",
+  "rulebook": "snap-max-allotment-48-states-dc",
+  "rulebook_version": "1"
+}
