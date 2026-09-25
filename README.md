@@ -2,6 +2,8 @@
 
 A check that has to pass before an automated system pays, denies, or files.
 
+![Terminal demo, about 40 seconds. It shows the rulebook's two dated figures for a two-person SNAP household ($546 through 30 September 2026, $562 from 1 October). The gate is given last year's $546 for an October decision and stops, saying 546 is present but not in force, with a delta of +16. The independent verifier then accepts the real receipt and rejects a forged copy whose verdict was changed to CLEAR.](demo/asof-gate.gif)
+
 It enforces two rules:
 
 1. **Every material fact is entailed.** A fact counts only if a span of the case file contains
