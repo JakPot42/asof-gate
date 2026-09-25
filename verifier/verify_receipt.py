@@ -13,7 +13,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 import sys
+import textwrap
 from pathlib import Path
 
 WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
@@ -251,6 +253,17 @@ def verify(receipt_path: Path, case_path: Path, rulebook_path: Path) -> list:
     return problems
 
 
+def say(text: str, indent: str = "") -> None:
+    """Print, wrapping at word boundaries when writing to a terminal. Pipes get one line."""
+    if not sys.stdout.isatty():
+        print(indent + text)
+        return
+    width = shutil.get_terminal_size((100, 24)).columns
+    print(textwrap.fill(text, width=width, initial_indent=indent,
+                        subsequent_indent=indent + "  ", break_long_words=False,
+                        break_on_hyphens=False))
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Verify an asof-gate receipt by recomputing it.")
     ap.add_argument("receipt")
@@ -260,13 +273,13 @@ def main(argv=None) -> int:
     problems = verify(Path(a.receipt), Path(a.case), Path(a.rulebook))
     receipt = json.loads(Path(a.receipt).read_text(encoding="utf-8"))
     if problems:
-        print(f"FAIL {a.receipt}")
+        say(f"FAIL {a.receipt}")
         for p in problems:
-            print(f"  - {p}")
+            say(f"- {p}", "  ")
         return 1
     d = receipt["decision"]
-    print(f"OK   {a.receipt}: recomputed independently, byte-identical. verdict {d['verdict']}, "
-          f"{len(d['findings'])} finding(s), receipt_sha256 {receipt['receipt_sha256'][:16]}...")
+    say(f"OK   {a.receipt}: recomputed independently, byte-identical. verdict {d['verdict']}, "
+        f"{len(d['findings'])} finding(s), receipt_sha256 {receipt['receipt_sha256'][:16]}...")
     return 0
 
 

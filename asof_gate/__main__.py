@@ -9,12 +9,25 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
+import textwrap
 from pathlib import Path
 
 from .receipt import build_receipt
 
 DEFAULT_RULEBOOK = "rules/snap_max_allotment.json"
+
+
+def _say(text: str, indent: str = "") -> None:
+    """Print, wrapping at word boundaries when writing to a terminal. Pipes get one line."""
+    if not sys.stdout.isatty():
+        print(indent + text)
+        return
+    width = shutil.get_terminal_size((100, 24)).columns
+    print(textwrap.fill(text, width=width, initial_indent=indent,
+                        subsequent_indent=indent + "  ", break_long_words=False,
+                        break_on_hyphens=False))
 
 
 def main(argv=None) -> int:
@@ -34,17 +47,17 @@ def main(argv=None) -> int:
                                encoding="utf-8", newline="\n")
 
     act, dec = fixture["action"], receipt["decision"]
-    print(f"{fixture['fixture']}: {act['action']} ${act['amount']} SNAP for "
-          f"{act['benefit_month']}, decision date {dec['decision_date']}")
-    print(f"  verdict: {dec['verdict']}")
+    _say(f"{fixture['fixture']}: {act['action']} ${act['amount']} SNAP for "
+         f"{act['benefit_month']}, decision date {dec['decision_date']}")
+    _say(f"verdict: {dec['verdict']}", "  ")
     for f in dec["findings"]:
-        print(f"  - {f['kind']}: {f['message']}")
+        _say(f"- {f['kind']}: {f['message']}", "  ")
     for fig in receipt["citations"]["figures"]:
-        print(f"  figure in force: {fig['parameter']} = {fig['value']} "
-              f"({fig['source_id']}, PDF page {fig['pdf_page']})")
-    print(f"  authority: {receipt['citations']['authority']['citation']} "
-          f"({receipt['citations']['authority']['role']})")
-    print(f"  receipt_sha256: {receipt['receipt_sha256']}")
+        _say(f"figure in force: {fig['parameter']} = {fig['value']} "
+             f"({fig['source_id']}, PDF page {fig['pdf_page']})", "  ")
+    _say(f"authority: {receipt['citations']['authority']['citation']} "
+         f"({receipt['citations']['authority']['role']})", "  ")
+    _say(f"receipt_sha256: {receipt['receipt_sha256']}", "  ")
     return 0 if dec["verdict"] == "CLEAR" else 2
 
 

@@ -29,7 +29,7 @@ from asof_gate.receipt import build_receipt, canonical, sha256_hex  # noqa: E402
 RULEBOOK = ROOT / "rules" / "snap_max_allotment.json"
 VERIFIER = ROOT / "verifier" / "verify_receipt.py"
 FIXTURES = sorted((ROOT / "fixtures").glob("*.json"))
-STDLIB_OK = {"__future__", "argparse", "hashlib", "json", "sys", "pathlib"}
+STDLIB_OK = {"__future__", "argparse", "hashlib", "json", "shutil", "sys", "textwrap", "pathlib"}
 
 
 def load(p):
