@@ -1,0 +1,74 @@
+{
+  "fixture": "STALE_TABLE",
+  "description": "Every fact is right. The maximum allotment, standard deduction and shelter cap are all last fiscal year's, as when the October table was never loaded.",
+  "case_file": "fixtures/cases/case_d.json",
+  "expect_verdict": "STOP",
+  "expect_class": "underpayment",
+  "expect_counts": true,
+  "action": {
+    "action_id": "stale_table",
+    "action": "determine",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-05",
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 8,
+        "documents": [
+          "APP-1"
+        ]
+      },
+      {
+        "name": "monthly_earned_income",
+        "person": "p1",
+        "value": 3010,
+        "documents": [
+          "PS-1",
+          "PS-2"
+        ]
+      },
+      {
+        "name": "monthly_rent",
+        "value": 1800,
+        "documents": [
+          "LEASE-1"
+        ]
+      },
+      {
+        "name": "heating_or_cooling_cost",
+        "value": 1,
+        "documents": [
+          "UTIL-1"
+        ]
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment",
+        "value": 1789,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      },
+      {
+        "parameter": "standard_deduction",
+        "value": 299,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      },
+      {
+        "parameter": "excess_shelter_cap",
+        "value": 744,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      },
+      {
+        "parameter": "gross_income_limit",
+        "value": 6037,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "net_income_limit",
+        "value": 4644,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "fixture": "CLEAR",
+  "description": "Every fact traces to the document in force and every figure is the fiscal year 2027 one.",
+  "case_file": "fixtures/cases/case_a.json",
+  "expect_verdict": "CLEAR",
+  "expect_class": null,
+  "expect_counts": null,
+  "action": {
+    "action_id": "clear",
+    "action": "determine",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-05",
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 3,
+        "documents": [
+          "APP-1"
+        ]
+      },
+      {
+        "name": "monthly_earned_income",
+        "person": "p1",
+        "value": 2150,
+        "documents": [
+          "PS-3",
+          "PS-4"
+        ]
+      },
+      {
+        "name": "monthly_rent",
+        "value": 1500,
+        "documents": [
+          "LEASE-1"
+        ]
+      },
+      {
+        "name": "heating_or_cooling_cost",
+        "value": 1,
+        "documents": [
+          "UTIL-1"
+        ]
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment",
+        "value": 808,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "standard_deduction",
+        "value": 217,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "excess_shelter_cap",
+        "value": 769,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "gross_income_limit",
+        "value": 2960,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "net_income_limit",
+        "value": 2277,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      }
+    ]
+  }
+}

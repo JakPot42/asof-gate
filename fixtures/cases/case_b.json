@@ -1,0 +1,112 @@
+{
+  "case_id": "CF-2002",
+  "note": "Synthetic household for demonstration. No real person, employer, landlord or utility.",
+  "state": "TN",
+  "household": {
+    "members": [
+      {
+        "id": "p1",
+        "name": "Applicant B",
+        "age": 41,
+        "k12_student": 0,
+        "weekly_hours": 40
+      },
+      {
+        "id": "p2",
+        "name": "Child of B, in 12th grade",
+        "age": 17,
+        "k12_student": 1,
+        "weekly_hours": 14
+      },
+      {
+        "id": "p3",
+        "name": "Child of B, in 4th grade",
+        "age": 9,
+        "k12_student": 1,
+        "weekly_hours": 0
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "APP-1",
+      "type": "application",
+      "person": "p1",
+      "payer": "",
+      "date": "2026-10-02",
+      "members": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "statement": "Everyone listed lives at the address on the lease and buys and prepares food together. All are U.S. citizens. Nobody is aged 60 or over or disabled. No savings or other resources. No income other than the wages on the pay stubs provided."
+    },
+    {
+      "id": "PS-1",
+      "type": "pay_stub",
+      "person": "p1",
+      "payer": "Riverbend Distribution",
+      "date": "2026-09-11",
+      "pay_period": "biweekly",
+      "hours": 80,
+      "regular_gross": 1150,
+      "one_time_bonus": 0,
+      "gross_total": 1150
+    },
+    {
+      "id": "PS-2",
+      "type": "pay_stub",
+      "person": "p1",
+      "payer": "Riverbend Distribution",
+      "date": "2026-09-25",
+      "pay_period": "biweekly",
+      "hours": 80,
+      "regular_gross": 1150,
+      "one_time_bonus": 0,
+      "gross_total": 1150
+    },
+    {
+      "id": "PS-3",
+      "type": "pay_stub",
+      "person": "p2",
+      "payer": "Corner Grocery",
+      "date": "2026-09-10",
+      "pay_period": "biweekly",
+      "hours": 28,
+      "regular_gross": 280,
+      "one_time_bonus": 0,
+      "gross_total": 280
+    },
+    {
+      "id": "PS-4",
+      "type": "pay_stub",
+      "person": "p2",
+      "payer": "Corner Grocery",
+      "date": "2026-09-24",
+      "pay_period": "biweekly",
+      "hours": 28,
+      "regular_gross": 280,
+      "one_time_bonus": 0,
+      "gross_total": 280
+    },
+    {
+      "id": "LEASE-1",
+      "type": "lease",
+      "person": "p1",
+      "payer": "Maple Row Townhomes",
+      "date": "2026-02-01",
+      "monthly_rent": 1500,
+      "term": "12 months from the date above"
+    },
+    {
+      "id": "UTIL-1",
+      "type": "utility_bill",
+      "person": "p1",
+      "payer": "Mid-State Electric",
+      "date": "2026-09-18",
+      "service": "Electric service, including heating and cooling",
+      "heating_or_cooling": 1,
+      "amount_due": 152
+    }
+  ]
+}

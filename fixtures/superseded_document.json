@@ -1,0 +1,74 @@
+{
+  "fixture": "SUPERSEDED_DOCUMENT",
+  "description": "The intake step used the two August pay stubs, from before the applicant's hours went up. Two September stubs are in the case file.",
+  "case_file": "fixtures/cases/case_a.json",
+  "expect_verdict": "STOP",
+  "expect_class": "overpayment",
+  "expect_counts": true,
+  "action": {
+    "action_id": "superseded_document",
+    "action": "determine",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-05",
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 3,
+        "documents": [
+          "APP-1"
+        ]
+      },
+      {
+        "name": "monthly_earned_income",
+        "person": "p1",
+        "value": 1505,
+        "documents": [
+          "PS-1",
+          "PS-2"
+        ]
+      },
+      {
+        "name": "monthly_rent",
+        "value": 1500,
+        "documents": [
+          "LEASE-1"
+        ]
+      },
+      {
+        "name": "heating_or_cooling_cost",
+        "value": 1,
+        "documents": [
+          "UTIL-1"
+        ]
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment",
+        "value": 808,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "standard_deduction",
+        "value": 217,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "excess_shelter_cap",
+        "value": 769,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "gross_income_limit",
+        "value": 2960,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "net_income_limit",
+        "value": 2277,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      }
+    ]
+  }
+}

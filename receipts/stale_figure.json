@@ -1,0 +1,264 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u), 2014(c) and (e), 2017(a)",
+      "role": "derivation only; states no dollar figure"
+    },
+    "figures": [
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "key": "2",
+        "parameter": "max_allotment",
+        "pdf_page": 4,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 562
+      },
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "key": "2",
+        "parameter": "standard_deduction",
+        "pdf_page": 6,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 217
+      },
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "key": "all",
+        "parameter": "excess_shelter_cap",
+        "pdf_page": 6,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 769
+      },
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "key": "2",
+        "parameter": "gross_income_limit",
+        "pdf_page": 3,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 2345
+      },
+      {
+        "effective_from": "2026-10-01",
+        "effective_to": "2027-09-30",
+        "key": "2",
+        "parameter": "net_income_limit",
+        "pdf_page": 3,
+        "role": "states the figure in force",
+        "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+        "source_id": "usda-fna-snap-cola-fy2027",
+        "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+        "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+        "value": 1804
+      }
+    ],
+    "impact_engine": {
+      "name": "policyengine-us",
+      "role": "computed the benefit amounts; not used to reach the verdict",
+      "version": "2.24.5"
+    },
+    "tolerance": {
+      "basis": "carried_forward",
+      "effective_from": "2025-10-01",
+      "effective_to": "2026-09-30",
+      "pdf_page": 1,
+      "role": "states the tolerance",
+      "sha256": "8f6acf29c44f1fd908e17782d48b83ccc130ce6576e434d119b22fe875d982ad",
+      "source_id": "usda-fns-snap-qc-policy-memo-25-04",
+      "title": "SNAP - Quality Control (QC) Error Tolerance Threshold for Fiscal Year (FY) 2026 - QC Policy Memo 25-04 (dated August 13, 2025)",
+      "url": "https://www.usda.gov/sites/default/files/guidance-documents/fns.snap-qc-ett-fy26.pdf",
+      "value": 58
+    }
+  },
+  "decision": {
+    "decision_date": "2026-10-05",
+    "findings": [
+      {
+        "decision_date": "2026-10-05",
+        "delta": 16,
+        "entry": -1,
+        "in_force_pdf_page": 4,
+        "in_force_source_id": "usda-fna-snap-cola-fy2027",
+        "in_force_value": 562,
+        "key": "2",
+        "kind": "NUMBER_NOT_IN_FORCE",
+        "message": "max_allotment[2]: 546 is present but not in force on 2026-10-05; it was in force 2025-10-01 to 2026-09-30. In force on 2026-10-05: 562 (usda-fna-snap-cola-fy2027, PDF page 4). Delta +16. To clear, supply 562 from a source in force on 2026-10-05.",
+        "reason": "value_out_of_date",
+        "subject": "max_allotment",
+        "supplied_effective_from": "2025-10-01",
+        "supplied_effective_to": "2026-09-30",
+        "supplied_source_id": "usda-fns-snap-fy2026-maximum-allotments",
+        "supplied_value": 546
+      }
+    ],
+    "impact": {
+      "class": "underpayment",
+      "counts_toward_payment_error_rate": false,
+      "error": -16,
+      "message": "Does not count toward the payment error rate: an underpayment of $16 a month ($546 as proposed, $562 as supported), at or below the $58 quality-control tolerance, the last USDA has published (in force 2025-10-01 to 2026-09-30; none is published for 2026-10-05).",
+      "proposed": {
+        "eligible": 1,
+        "inputs": {
+          "benefit_month": "2026-10",
+          "earned_income": [],
+          "figures": {
+            "excess_shelter_cap": 769,
+            "gross_income_limit": 2345,
+            "max_allotment": 546,
+            "net_income_limit": 1804,
+            "standard_deduction": 217
+          },
+          "heating_or_cooling_cost": 1,
+          "household_size": 2,
+          "members": [
+            {
+              "age": 29,
+              "id": "p1",
+              "k12_student": 0,
+              "weekly_hours": 0
+            },
+            {
+              "age": 4,
+              "id": "p2",
+              "k12_student": 0,
+              "weekly_hours": 0
+            }
+          ],
+          "monthly_rent": 900,
+          "state": "TN"
+        },
+        "inputs_sha256": "b1ea17708c116f70d1cc7425f77ec8a3f092f87422f6865a466e1d37d981b036",
+        "monthly_benefit": 546
+      },
+      "status": "computed",
+      "supported": {
+        "eligible": 1,
+        "inputs": {
+          "benefit_month": "2026-10",
+          "earned_income": [],
+          "figures": {
+            "excess_shelter_cap": 769,
+            "gross_income_limit": 2345,
+            "max_allotment": 562,
+            "net_income_limit": 1804,
+            "standard_deduction": 217
+          },
+          "heating_or_cooling_cost": 1,
+          "household_size": 2,
+          "members": [
+            {
+              "age": 29,
+              "id": "p1",
+              "k12_student": 0,
+              "weekly_hours": 0
+            },
+            {
+              "age": 4,
+              "id": "p2",
+              "k12_student": 0,
+              "weekly_hours": 0
+            }
+          ],
+          "monthly_rent": 900,
+          "state": "TN"
+        },
+        "inputs_sha256": "a23d9e646e308c9a169e07091ac79219a84cc7b583a77963129fcb3ddbdf0d7f",
+        "monthly_benefit": 562
+      },
+      "tolerance": {
+        "basis": "carried_forward",
+        "effective_from": "2025-10-01",
+        "effective_to": "2026-09-30",
+        "pdf_page": 1,
+        "source_id": "usda-fns-snap-qc-policy-memo-25-04",
+        "value": 58
+      }
+    },
+    "verdict": "STOP"
+  },
+  "inputs": {
+    "action": {
+      "action": "determine",
+      "action_id": "stale_figure",
+      "benefit_month": "2026-10",
+      "decision_date": "2026-10-05",
+      "facts": [
+        {
+          "documents": [
+            "APP-1"
+          ],
+          "name": "household_size",
+          "value": 2
+        },
+        {
+          "documents": [
+            "LEASE-1"
+          ],
+          "name": "monthly_rent",
+          "value": 900
+        },
+        {
+          "documents": [
+            "UTIL-1"
+          ],
+          "name": "heating_or_cooling_cost",
+          "value": 1
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "max_allotment",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "value": 546
+        },
+        {
+          "parameter": "standard_deduction",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "value": 217
+        },
+        {
+          "parameter": "excess_shelter_cap",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "value": 769
+        },
+        {
+          "parameter": "gross_income_limit",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "value": 2345
+        },
+        {
+          "parameter": "net_income_limit",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "value": 1804
+        }
+      ],
+      "program": "SNAP"
+    },
+    "case_file_sha256": "5d06302822f4d000e236bb3ce1e2d86222779afeb0ce952e61d939d7831ad4fd",
+    "impact_table_sha256": "a6c49d13ab100fc1e16cd8d2aa212cba84101dc8dfdc3a1b367f0520a36236c7",
+    "rulebook_sha256": "de82baaea499d8e0c6d4d788113ba185e689a1761c539be82a1970d52f0bc62e"
+  },
+  "receipt_schema": "asof-gate/receipt/2",
+  "receipt_sha256": "6713bcbb046f8bb1378adb3ae2b7896774fb235006578f52f88eaa150ffe7969",
+  "rulebook": "snap-48-states-dc",
+  "rulebook_version": "2"
+}

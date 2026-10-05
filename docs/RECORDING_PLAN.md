@@ -1,5 +1,9 @@
 # Recording plan (for review before recording)
 
+> This plan, and `demo/asof-gate.tape`, describe the recording of the earlier version (commit
+> `1872ca7`). The fixtures it names were replaced in version 2. A new plan has not been written
+> and nothing has been re-recorded.
+
 **Length:** 30 to 45 seconds. **Format:** terminal only, one window, large font, width at least
 110 columns so no message wraps mid-word. Captions are on-screen text. Nothing is typed live that
 is not in this plan. Recorded from a fresh clone.

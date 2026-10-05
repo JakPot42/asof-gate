@@ -1,0 +1,65 @@
+{
+  "fixture": "STALE_FIGURE",
+  "description": "Dating footnote. Every fact is right, and the maximum allotment is last fiscal year's $546. In force from 1 October 2026: $562.",
+  "case_file": "fixtures/cases/case_c.json",
+  "expect_verdict": "STOP",
+  "expect_class": "underpayment",
+  "expect_counts": false,
+  "action": {
+    "action_id": "stale_figure",
+    "action": "determine",
+    "program": "SNAP",
+    "benefit_month": "2026-10",
+    "decision_date": "2026-10-05",
+    "facts": [
+      {
+        "name": "household_size",
+        "value": 2,
+        "documents": [
+          "APP-1"
+        ]
+      },
+      {
+        "name": "monthly_rent",
+        "value": 900,
+        "documents": [
+          "LEASE-1"
+        ]
+      },
+      {
+        "name": "heating_or_cooling_cost",
+        "value": 1,
+        "documents": [
+          "UTIL-1"
+        ]
+      }
+    ],
+    "numbers": [
+      {
+        "parameter": "max_allotment",
+        "value": 546,
+        "source_id": "usda-fns-snap-fy2026-maximum-allotments"
+      },
+      {
+        "parameter": "standard_deduction",
+        "value": 217,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "excess_shelter_cap",
+        "value": 769,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "gross_income_limit",
+        "value": 2345,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      },
+      {
+        "parameter": "net_income_limit",
+        "value": 1804,
+        "source_id": "usda-fna-snap-cola-fy2027"
+      }
+    ]
+  }
+}

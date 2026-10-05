@@ -1,0 +1,533 @@
+{
+  "engine": {
+    "core_version": "3.32.17",
+    "name": "policyengine-us",
+    "version": "2.24.5"
+  },
+  "results": {
+    "0ae65fc44b98b544f3c4ce13d8a41b77064ab74d4aa2f058e9b2cdf78dfa1236": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "2472.00",
+        "net_income": "992.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "510.00",
+        "utility_allowance": "485.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 2472,
+            "person": "p1"
+          },
+          {
+            "monthly": 602,
+            "person": "p2"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2960,
+          "max_allotment": 808,
+          "net_income_limit": 2277,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 3,
+        "members": [
+          {
+            "age": 41,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 17,
+            "id": "p2",
+            "k12_student": 1,
+            "weekly_hours": 14
+          },
+          {
+            "age": 9,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1500,
+        "state": "TN"
+      },
+      "monthly_benefit": 510
+    },
+    "150e6b7e0da8f2b22adb750909c13e35213240d216f48935f392cd52c6268893": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "3074.00",
+        "net_income": "1473.00",
+        "passes_gross_income_test": "false",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "0.00",
+        "utility_allowance": "485.00"
+      },
+      "eligible": 0,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 602,
+            "person": "p1"
+          },
+          {
+            "monthly": 2472,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2960,
+          "max_allotment": 808,
+          "net_income_limit": 2277,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 3,
+        "members": [
+          {
+            "age": 41,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 17,
+            "id": "p2",
+            "k12_student": 1,
+            "weekly_hours": 14
+          },
+          {
+            "age": 9,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1500,
+        "state": "TN"
+      },
+      "monthly_benefit": 0
+    },
+    "3dca6198a91dd7ac0dcacc2f4d695e3eee393e88cb7efd58d7d43f074d123d4f": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "2150.00",
+        "net_income": "734.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "587.00",
+        "utility_allowance": "485.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 2150,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2960,
+          "max_allotment": 808,
+          "net_income_limit": 2277,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 3,
+        "members": [
+          {
+            "age": 34,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 9,
+            "id": "p2",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 6,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1500,
+        "state": "TN"
+      },
+      "monthly_benefit": 587
+    },
+    "6ae8a02fb9c85944edb5be88af47702208b40bcdf05577fd56dc0ae88796c692": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "2795.00",
+        "net_income": "1250.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "433.00",
+        "utility_allowance": "485.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 2795,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2960,
+          "max_allotment": 808,
+          "net_income_limit": 2277,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 3,
+        "members": [
+          {
+            "age": 34,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 9,
+            "id": "p2",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 6,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1500,
+        "state": "TN"
+      },
+      "monthly_benefit": 433
+    },
+    "6f09e48d8cdce58c10f4aa85f0b5c1956e30b252956ebe0bcc9025f2ff1d00dc": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "3010.00",
+        "net_income": "1331.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "1441.00",
+        "utility_allowance": "568.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 3010,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 6037,
+          "max_allotment": 1841,
+          "net_income_limit": 4644,
+          "standard_deduction": 308
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 8,
+        "members": [
+          {
+            "age": 38,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 36,
+            "id": "p2",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 13,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 11,
+            "id": "p4",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 9,
+            "id": "p5",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 7,
+            "id": "p6",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 4,
+            "id": "p7",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 2,
+            "id": "p8",
+            "k12_student": 0,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1800,
+        "state": "TN"
+      },
+      "monthly_benefit": 1441
+    },
+    "7e7c5449fffeb5bd1f9c31ae654ea40b34f18406254a88a39e1d8683b1afb7da": {
+      "detail": {
+        "excess_shelter_deduction": "744.00",
+        "gross_income": "3010.00",
+        "net_income": "1365.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "1379.00",
+        "utility_allowance": "568.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 3010,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 744,
+          "gross_income_limit": 6037,
+          "max_allotment": 1789,
+          "net_income_limit": 4644,
+          "standard_deduction": 299
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 8,
+        "members": [
+          {
+            "age": 38,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 36,
+            "id": "p2",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 13,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 11,
+            "id": "p4",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 9,
+            "id": "p5",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 7,
+            "id": "p6",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 4,
+            "id": "p7",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 2,
+            "id": "p8",
+            "k12_student": 0,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1800,
+        "state": "TN"
+      },
+      "monthly_benefit": 1379
+    },
+    "82991198ab1ef90815f15876ae7fd56f1a712e3309327d673c3d757cd5b10c72": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "1505.00",
+        "net_income": "218.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "742.00",
+        "utility_allowance": "485.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [
+          {
+            "monthly": 1505,
+            "person": "p1"
+          }
+        ],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2960,
+          "max_allotment": 808,
+          "net_income_limit": 2277,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 3,
+        "members": [
+          {
+            "age": 34,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 40
+          },
+          {
+            "age": 9,
+            "id": "p2",
+            "k12_student": 1,
+            "weekly_hours": 0
+          },
+          {
+            "age": 6,
+            "id": "p3",
+            "k12_student": 1,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 1500,
+        "state": "TN"
+      },
+      "monthly_benefit": 742
+    },
+    "a23d9e646e308c9a169e07091ac79219a84cc7b583a77963129fcb3ddbdf0d7f": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "0.00",
+        "net_income": "0.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "562.00",
+        "utility_allowance": "466.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2345,
+          "max_allotment": 562,
+          "net_income_limit": 1804,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 2,
+        "members": [
+          {
+            "age": 29,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 4,
+            "id": "p2",
+            "k12_student": 0,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 900,
+        "state": "TN"
+      },
+      "monthly_benefit": 562
+    },
+    "b1ea17708c116f70d1cc7425f77ec8a3f092f87422f6865a466e1d37d981b036": {
+      "detail": {
+        "excess_shelter_deduction": "769.00",
+        "gross_income": "0.00",
+        "net_income": "0.00",
+        "passes_gross_income_test": "true",
+        "passes_net_income_test": "true",
+        "snap_unrounded": "546.00",
+        "utility_allowance": "466.00"
+      },
+      "eligible": 1,
+      "inputs": {
+        "benefit_month": "2026-10",
+        "earned_income": [],
+        "figures": {
+          "excess_shelter_cap": 769,
+          "gross_income_limit": 2345,
+          "max_allotment": 546,
+          "net_income_limit": 1804,
+          "standard_deduction": 217
+        },
+        "heating_or_cooling_cost": 1,
+        "household_size": 2,
+        "members": [
+          {
+            "age": 29,
+            "id": "p1",
+            "k12_student": 0,
+            "weekly_hours": 0
+          },
+          {
+            "age": 4,
+            "id": "p2",
+            "k12_student": 0,
+            "weekly_hours": 0
+          }
+        ],
+        "monthly_rent": 900,
+        "state": "TN"
+      },
+      "monthly_benefit": 546
+    }
+  },
+  "what_this_is": "PolicyEngine results keyed by the SHA-256 of the canonical determination inputs (docs/SPEC.md, Rule 3). Written by tools/policyengine_tool.py."
+}

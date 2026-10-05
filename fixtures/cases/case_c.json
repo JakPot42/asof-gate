@@ -1,0 +1,56 @@
+{
+  "case_id": "CF-2003",
+  "note": "Synthetic household for demonstration. No real person, employer, landlord or utility.",
+  "state": "TN",
+  "household": {
+    "members": [
+      {
+        "id": "p1",
+        "name": "Applicant C",
+        "age": 29,
+        "k12_student": 0,
+        "weekly_hours": 0
+      },
+      {
+        "id": "p2",
+        "name": "Child of C",
+        "age": 4,
+        "k12_student": 0,
+        "weekly_hours": 0
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "APP-1",
+      "type": "application",
+      "person": "p1",
+      "payer": "",
+      "date": "2026-10-02",
+      "members": [
+        "p1",
+        "p2"
+      ],
+      "statement": "Everyone listed lives at the address on the lease and buys and prepares food together. All are U.S. citizens. Nobody is aged 60 or over or disabled. No savings or other resources. Nobody in the household has any income."
+    },
+    {
+      "id": "LEASE-1",
+      "type": "lease",
+      "person": "p1",
+      "payer": "Pine Street Duplex",
+      "date": "2026-02-01",
+      "monthly_rent": 900,
+      "term": "12 months from the date above"
+    },
+    {
+      "id": "UTIL-1",
+      "type": "utility_bill",
+      "person": "p1",
+      "payer": "Mid-State Electric",
+      "date": "2026-09-18",
+      "service": "Electric service, including heating and cooling",
+      "heating_or_cooling": 1,
+      "amount_due": 96
+    }
+  ]
+}

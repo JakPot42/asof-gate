@@ -1,0 +1,819 @@
+{
+  "what_this_is": "Every FY 2026 figure applied, one at a time and all together, to synthetic October 2026 households, against the same household with the FY 2027 figures in force. Written by tools/policyengine_tool.py search.",
+  "engine": {
+    "name": "policyengine-us",
+    "version": "2.24.5",
+    "core_version": "3.32.17"
+  },
+  "benefit_month": "2026-10",
+  "state": "TN",
+  "tolerance": 58,
+  "grid": {
+    "household_sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "monthly_rents": [
+      0,
+      600,
+      1000,
+      1400,
+      1800,
+      2400
+    ],
+    "monthly_earned": "0 to just past the gross income limit, in steps of 150, and in steps of 10 across the last 140 below the limit",
+    "households": 3594
+  },
+  "rows": [
+    {
+      "size": 1,
+      "stale_figure": "max_allotment",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 298,
+        "benefit_with_figure_in_force": 306
+      }
+    },
+    {
+      "size": 1,
+      "stale_figure": "standard_deduction",
+      "largest_error": -4,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1649,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 121,
+        "benefit_with_figure_in_force": 125
+      }
+    },
+    {
+      "size": 1,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1649,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 198,
+        "benefit_with_figure_in_force": 206
+      }
+    },
+    {
+      "size": 1,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 24,
+      "largest_denied_benefit": 194,
+      "example": null
+    },
+    {
+      "size": 1,
+      "stale_figure": "all_figures",
+      "largest_error": -18,
+      "counting_cases": 0,
+      "wrongful_denials": 24,
+      "largest_denied_benefit": 194,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 259,
+        "benefit_with_figure_in_force": 277
+      }
+    },
+    {
+      "size": 2,
+      "stale_figure": "max_allotment",
+      "largest_error": -16,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 546,
+        "benefit_with_figure_in_force": 562
+      }
+    },
+    {
+      "size": 2,
+      "stale_figure": "standard_deduction",
+      "largest_error": -4,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 750,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 525,
+        "benefit_with_figure_in_force": 529
+      }
+    },
+    {
+      "size": 2,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 2274,
+        "monthly_rent": 1400,
+        "benefit_with_stale_figure": 304,
+        "benefit_with_figure_in_force": 312
+      }
+    },
+    {
+      "size": 2,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 36,
+      "largest_denied_benefit": 307,
+      "example": null
+    },
+    {
+      "size": 2,
+      "stale_figure": "all_figures",
+      "largest_error": -26,
+      "counting_cases": 0,
+      "wrongful_denials": 36,
+      "largest_denied_benefit": 307,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 507,
+        "benefit_with_figure_in_force": 533
+      }
+    },
+    {
+      "size": 3,
+      "stale_figure": "max_allotment",
+      "largest_error": -23,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 785,
+        "benefit_with_figure_in_force": 808
+      }
+    },
+    {
+      "size": 3,
+      "stale_figure": "standard_deduction",
+      "largest_error": -4,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 750,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 777,
+        "benefit_with_figure_in_force": 781
+      }
+    },
+    {
+      "size": 3,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 2899,
+        "monthly_rent": 1400,
+        "benefit_with_stale_figure": 400,
+        "benefit_with_figure_in_force": 408
+      }
+    },
+    {
+      "size": 3,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 48,
+      "largest_denied_benefit": 410,
+      "example": null
+    },
+    {
+      "size": 3,
+      "stale_figure": "all_figures",
+      "largest_error": -33,
+      "counting_cases": 0,
+      "wrongful_denials": 48,
+      "largest_denied_benefit": 410,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 746,
+        "benefit_with_figure_in_force": 779
+      }
+    },
+    {
+      "size": 4,
+      "stale_figure": "max_allotment",
+      "largest_error": -29,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 994,
+        "benefit_with_figure_in_force": 1023
+      }
+    },
+    {
+      "size": 4,
+      "stale_figure": "standard_deduction",
+      "largest_error": -3,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 3495,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 315,
+        "benefit_with_figure_in_force": 318
+      }
+    },
+    {
+      "size": 4,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 990,
+        "benefit_with_figure_in_force": 998
+      }
+    },
+    {
+      "size": 4,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 54,
+      "largest_denied_benefit": 483,
+      "example": null
+    },
+    {
+      "size": 4,
+      "stale_figure": "all_figures",
+      "largest_error": -38,
+      "counting_cases": 0,
+      "wrongful_denials": 54,
+      "largest_denied_benefit": 483,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 960,
+        "benefit_with_figure_in_force": 998
+      }
+    },
+    {
+      "size": 5,
+      "stale_figure": "max_allotment",
+      "largest_error": -34,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 1183,
+        "benefit_with_figure_in_force": 1217
+      }
+    },
+    {
+      "size": 5,
+      "stale_figure": "standard_deduction",
+      "largest_error": -4,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 4120,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 306,
+        "benefit_with_figure_in_force": 310
+      }
+    },
+    {
+      "size": 5,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1196,
+        "benefit_with_figure_in_force": 1204
+      }
+    },
+    {
+      "size": 5,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 54,
+      "largest_denied_benefit": 541,
+      "example": null
+    },
+    {
+      "size": 5,
+      "stale_figure": "all_figures",
+      "largest_error": -44,
+      "counting_cases": 0,
+      "wrongful_denials": 54,
+      "largest_denied_benefit": 541,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1160,
+        "benefit_with_figure_in_force": 1204
+      }
+    },
+    {
+      "size": 6,
+      "stale_figure": "max_allotment",
+      "largest_error": -42,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 1421,
+        "benefit_with_figure_in_force": 1463
+      }
+    },
+    {
+      "size": 6,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 4765,
+        "monthly_rent": 1400,
+        "benefit_with_stale_figure": 462,
+        "benefit_with_figure_in_force": 467
+      }
+    },
+    {
+      "size": 6,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1454,
+        "benefit_with_figure_in_force": 1462
+      }
+    },
+    {
+      "size": 6,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 652,
+      "example": null
+    },
+    {
+      "size": 6,
+      "stale_figure": "all_figures",
+      "largest_error": -53,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 652,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1409,
+        "benefit_with_figure_in_force": 1462
+      }
+    },
+    {
+      "size": 7,
+      "stale_figure": "max_allotment",
+      "largest_error": -45,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 1571,
+        "benefit_with_figure_in_force": 1616
+      }
+    },
+    {
+      "size": 7,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 5361,
+        "monthly_rent": 1800,
+        "benefit_with_stale_figure": 525,
+        "benefit_with_figure_in_force": 530
+      }
+    },
+    {
+      "size": 7,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1607,
+        "benefit_with_figure_in_force": 1615
+      }
+    },
+    {
+      "size": 7,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 657,
+      "example": null
+    },
+    {
+      "size": 7,
+      "stale_figure": "all_figures",
+      "largest_error": -56,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 657,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 1000,
+        "benefit_with_stale_figure": 1559,
+        "benefit_with_figure_in_force": 1615
+      }
+    },
+    {
+      "size": 8,
+      "stale_figure": "max_allotment",
+      "largest_error": -52,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 1789,
+        "benefit_with_figure_in_force": 1841
+      }
+    },
+    {
+      "size": 8,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 900,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 1821,
+        "benefit_with_figure_in_force": 1826
+      }
+    },
+    {
+      "size": 8,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 1832,
+        "benefit_with_figure_in_force": 1840
+      }
+    },
+    {
+      "size": 8,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 725,
+      "example": null
+    },
+    {
+      "size": 8,
+      "stale_figure": "all_figures",
+      "largest_error": -63,
+      "counting_cases": 75,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 725,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 1777,
+        "benefit_with_figure_in_force": 1840
+      }
+    },
+    {
+      "size": 9,
+      "stale_figure": "max_allotment",
+      "largest_error": -59,
+      "counting_cases": 324,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 2007,
+        "benefit_with_figure_in_force": 2066
+      }
+    },
+    {
+      "size": 9,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 6591,
+        "monthly_rent": 2400,
+        "benefit_with_stale_figure": 723,
+        "benefit_with_figure_in_force": 728
+      }
+    },
+    {
+      "size": 9,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2057,
+        "benefit_with_figure_in_force": 2065
+      }
+    },
+    {
+      "size": 9,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 735,
+      "example": null
+    },
+    {
+      "size": 9,
+      "stale_figure": "all_figures",
+      "largest_error": -70,
+      "counting_cases": 264,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 735,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 1995,
+        "benefit_with_figure_in_force": 2065
+      }
+    },
+    {
+      "size": 10,
+      "stale_figure": "max_allotment",
+      "largest_error": -66,
+      "counting_cases": 348,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 2225,
+        "benefit_with_figure_in_force": 2291
+      }
+    },
+    {
+      "size": 10,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 7187,
+        "monthly_rent": 2400,
+        "benefit_with_stale_figure": 738,
+        "benefit_with_figure_in_force": 743
+      }
+    },
+    {
+      "size": 10,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2282,
+        "benefit_with_figure_in_force": 2290
+      }
+    },
+    {
+      "size": 10,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 743,
+      "example": null
+    },
+    {
+      "size": 10,
+      "stale_figure": "all_figures",
+      "largest_error": -77,
+      "counting_cases": 288,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 743,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2213,
+        "benefit_with_figure_in_force": 2290
+      }
+    },
+    {
+      "size": 11,
+      "stale_figure": "max_allotment",
+      "largest_error": -73,
+      "counting_cases": 372,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 2443,
+        "benefit_with_figure_in_force": 2516
+      }
+    },
+    {
+      "size": 11,
+      "stale_figure": "standard_deduction",
+      "largest_error": -5,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 7812,
+        "monthly_rent": 2400,
+        "benefit_with_stale_figure": 738,
+        "benefit_with_figure_in_force": 743
+      }
+    },
+    {
+      "size": 11,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2507,
+        "benefit_with_figure_in_force": 2515
+      }
+    },
+    {
+      "size": 11,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 747,
+      "example": null
+    },
+    {
+      "size": 11,
+      "stale_figure": "all_figures",
+      "largest_error": -84,
+      "counting_cases": 312,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 747,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2431,
+        "benefit_with_figure_in_force": 2515
+      }
+    },
+    {
+      "size": 12,
+      "stale_figure": "max_allotment",
+      "largest_error": -80,
+      "counting_cases": 396,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 0,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 2661,
+        "benefit_with_figure_in_force": 2741
+      }
+    },
+    {
+      "size": 12,
+      "stale_figure": "standard_deduction",
+      "largest_error": -4,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 900,
+        "monthly_rent": 0,
+        "benefit_with_stale_figure": 2732,
+        "benefit_with_figure_in_force": 2736
+      }
+    },
+    {
+      "size": 12,
+      "stale_figure": "excess_shelter_cap",
+      "largest_error": -8,
+      "counting_cases": 0,
+      "wrongful_denials": 0,
+      "largest_denied_benefit": 0,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2732,
+        "benefit_with_figure_in_force": 2740
+      }
+    },
+    {
+      "size": 12,
+      "stale_figure": "income_limits",
+      "largest_error": 0,
+      "counting_cases": 0,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 817,
+      "example": null
+    },
+    {
+      "size": 12,
+      "stale_figure": "all_figures",
+      "largest_error": -91,
+      "counting_cases": 336,
+      "wrongful_denials": 60,
+      "largest_denied_benefit": 817,
+      "example": {
+        "monthly_earned": 1350,
+        "monthly_rent": 600,
+        "benefit_with_stale_figure": 2649,
+        "benefit_with_figure_in_force": 2740
+      }
+    }
+  ]
+}

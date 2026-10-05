@@ -1,0 +1,192 @@
+{
+  "rulebook": "snap-48-states-dc",
+  "rulebook_version": "2",
+  "scope": {
+    "program": "SNAP",
+    "region": "48 contiguous States and the District of Columbia",
+    "household_sizes": [1, 2, 3, 4, 5, 6, 7, 8],
+    "note": "Federal figures only. Household sizes 1 to 8. No elderly or disabled member, no unearned income, no dependent care, medical or child support deduction. State figures (the standard utility allowance, broad-based categorical eligibility) are not in this rulebook."
+  },
+  "authority": {
+    "citation": "Food and Nutrition Act of 2008, 7 U.S.C. 2012(u), 2014(c) and (e), 2017(a)",
+    "what_it_establishes": "The statute sets how each figure is derived: the thrifty food plan and its October 1 adjustment (2012(u)), the income standards as a share of the poverty line (2014(c)), the deductions and their annual adjustment (2014(e)), and the allotment as the thrifty food plan less 30 percent of income (2017(a)). It states none of the dollar figures below. Those are USDA's, taken from the documents cited for each value.",
+    "retrieved": "2026-09-25",
+    "retrieved_from": "uscode.house.gov, preliminary edition"
+  },
+  "sources": {
+    "usda-fns-snap-fy2026-maximum-allotments": {
+      "title": "Supplemental Nutrition Assistance Program (SNAP) Fiscal Year (FY) 2026 Maximum Allotments and Deductions",
+      "publisher": "USDA Food and Nutrition Service",
+      "url": "https://www.fns.usda.gov/sites/default/files/resource-files/snap-fy26maximumAllotments-deductions.pdf",
+      "file": "sources/usda-fns-snap-fy2026-maximum-allotments.pdf",
+      "sha256": "c037d4d6da50c1f3de9f6871b2c8864ab220714fbcd8d4b0da633798b99a0732",
+      "quote": "The following tables provide the monthly maximum allotment and allowable deductions for FY 2026 (effective October 1, 2025, through September 30, 2026)."
+    },
+    "usda-fna-snap-cola-fy2027": {
+      "title": "SNAP - Fiscal Year 2027 Cost-of-Living Adjustments (memorandum to all State agencies, dated August 21, 2026)",
+      "publisher": "USDA Food and Nutrition Administration",
+      "url": "https://www.usda.gov/sites/default/files/guidance-documents/fna.snap-cola2027.pdf",
+      "file": "sources/usda-fna-snap-cola-fy2027.pdf",
+      "sha256": "67039672203fb2b706fcb6bb560e5026a3ae4570b52c2e6687abcefbd0d2bc8f",
+      "quote": "In accordance with the Food and Nutrition Act of 2008 (\"the Act\"), the COLAs are effective as of October 1, 2026."
+    },
+    "usda-fns-snap-qc-policy-memo-25-04": {
+      "title": "SNAP - Quality Control (QC) Error Tolerance Threshold for Fiscal Year (FY) 2026 - QC Policy Memo 25-04 (dated August 13, 2025)",
+      "publisher": "USDA Food and Nutrition Service",
+      "url": "https://www.usda.gov/sites/default/files/guidance-documents/fns.snap-qc-ett-fy26.pdf",
+      "file": "",
+      "sha256": "8f6acf29c44f1fd908e17782d48b83ccc130ce6576e434d119b22fe875d982ad",
+      "quote": "For FY 2026, all State agencies must use $58 as the QC tolerance level. Errors less than or equal to the threshold must be excluded from payment error rate calculations unless associated with a determination that the household was ineligible for the sample month's benefits.",
+      "not_vendored": "Read on usda.gov on 2026-10-05 (one page, 1,500,513 bytes). The hash is of the bytes served that day. The file is not in sources/ because usda.gov refuses scripted downloads and a copy was not saved."
+    }
+  },
+  "parameters": {
+    "max_allotment": {
+      "unit": "USD per month",
+      "by": "household_size",
+      "versions": [
+        {
+          "effective_from": "2025-10-01",
+          "effective_to": "2026-09-30",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "pdf_page": 1,
+          "row": "Table 1: Maximum Monthly Allotment, 48 States & District of Columbia",
+          "values": {"1": 298, "2": 546, "3": 785, "4": 994, "5": 1183, "6": 1421, "7": 1571, "8": 1789}
+        },
+        {
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "pdf_page": 4,
+          "row": "Maximum SNAP Allotments for 48 States and D.C.",
+          "values": {"1": 306, "2": 562, "3": 808, "4": 1023, "5": 1217, "6": 1463, "7": 1616, "8": 1841}
+        }
+      ]
+    },
+    "standard_deduction": {
+      "unit": "USD per month",
+      "by": "household_size",
+      "versions": [
+        {
+          "effective_from": "2025-10-01",
+          "effective_to": "2026-09-30",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "pdf_page": 2,
+          "row": "Table 2: Standard Deductions, 48 States & District of Columbia (6+ applied to sizes 6, 7 and 8)",
+          "values": {"1": 209, "2": 209, "3": 209, "4": 223, "5": 261, "6": 299, "7": 299, "8": 299}
+        },
+        {
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "pdf_page": 6,
+          "row": "Standard Deductions, 48 States and D.C. (1-2 applied to sizes 1 and 2; 6+ applied to sizes 6, 7 and 8)",
+          "values": {"1": 217, "2": 217, "3": 217, "4": 229, "5": 268, "6": 308, "7": 308, "8": 308}
+        }
+      ]
+    },
+    "excess_shelter_cap": {
+      "unit": "USD per month",
+      "by": "all",
+      "versions": [
+        {
+          "effective_from": "2025-10-01",
+          "effective_to": "2026-09-30",
+          "source_id": "usda-fns-snap-fy2026-maximum-allotments",
+          "pdf_page": 2,
+          "row": "Table 3: Maximum Excess Shelter Deductions, 48 States & District of Columbia",
+          "values": {"all": 744}
+        },
+        {
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "pdf_page": 6,
+          "row": "Maximum Excess Shelter Deductions, 48 States and D.C.",
+          "values": {"all": 769}
+        }
+      ]
+    },
+    "gross_income_limit": {
+      "unit": "USD per month",
+      "by": "household_size",
+      "versions": [
+        {
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "pdf_page": 3,
+          "row": "Gross Monthly Income Eligibility Standards (130 Percent of Poverty Level), 48 States, D.C., Guam, Virgin Islands",
+          "values": {"1": 1729, "2": 2345, "3": 2960, "4": 3575, "5": 4191, "6": 4806, "7": 5421, "8": 6037}
+        }
+      ]
+    },
+    "net_income_limit": {
+      "unit": "USD per month",
+      "by": "household_size",
+      "versions": [
+        {
+          "effective_from": "2026-10-01",
+          "effective_to": "2027-09-30",
+          "source_id": "usda-fna-snap-cola-fy2027",
+          "pdf_page": 3,
+          "row": "Net Monthly Income Eligibility Standards (100 Percent of Poverty Level), 48 States, D.C., Guam, Virgin Islands",
+          "values": {"1": 1330, "2": 1804, "3": 2277, "4": 2750, "5": 3224, "6": 3697, "7": 4170, "8": 4644}
+        }
+      ]
+    }
+  },
+  "qc_tolerance": {
+    "unit": "USD per month",
+    "what_it_is": "The quality-control error tolerance threshold. A payment error at or below it is left out of the State's payment error rate, unless the household was ineligible.",
+    "authority": "7 U.S.C. 2025(c)(1)(A)(ii); 7 CFR 275.12(f)(2)",
+    "status_note": "USDA's threshold table (fna.usda.gov/snap/qc/ett, page updated November 24, 2025, read 2026-10-05) ends at fiscal year 2026. No fiscal year 2027 threshold was found on that page or on USDA's guidance portal on 2026-10-05. For a decision date after the last version here, the gate carries the last published threshold forward and says so.",
+    "versions": [
+      {
+        "value": 58,
+        "effective_from": "2025-10-01",
+        "effective_to": "2026-09-30",
+        "source_id": "usda-fns-snap-qc-policy-memo-25-04",
+        "pdf_page": 1
+      }
+    ]
+  },
+  "fact_rules": {
+    "household_size": {
+      "cardinality": "one",
+      "reads": "application",
+      "count": 1,
+      "person_bound": false,
+      "compute": "count",
+      "field": "members",
+      "description": "The number of people listed on the application as living and eating together."
+    },
+    "monthly_earned_income": {
+      "cardinality": "any",
+      "reads": "pay_stub",
+      "count": 2,
+      "person_bound": true,
+      "compute": "biweekly_to_monthly",
+      "field": "regular_gross",
+      "description": "One person's monthly gross wages from one employer: the regular gross pay on the two most recent biweekly pay stubs, summed, times 215, divided by 200, rounded down to the dollar. That is the average biweekly amount times 2.15 (7 CFR 273.10(c)(2)(i)). Only the regular-pay line is read. Pay the stub marks as one-time is not income the household is reasonably certain to receive again (7 CFR 273.10(c)(1)(i)). Rounding down is this demonstration's convention; States choose their own."
+    },
+    "monthly_rent": {
+      "cardinality": "one",
+      "reads": "lease",
+      "count": 1,
+      "person_bound": false,
+      "compute": "field",
+      "field": "monthly_rent",
+      "description": "The monthly rent on the lease in force."
+    },
+    "heating_or_cooling_cost": {
+      "cardinality": "one",
+      "reads": "utility_bill",
+      "count": 1,
+      "person_bound": false,
+      "compute": "field",
+      "field": "heating_or_cooling",
+      "description": "1 if the most recent utility bill is for heating or cooling, otherwise 0. This is what entitles a household to its State's standard utility allowance; the allowance amount is a State figure and is not checked here."
+    }
+  }
+}
