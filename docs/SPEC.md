@@ -6,7 +6,10 @@ import the gate, so a receipt can be checked by anyone who reads this document a
 third implementation.
 
 Version 1 checked one figure for one household size against a text case file. Version 2 is a
-clean break: version 1 receipts do not verify under it.
+clean break. A version 1 receipt (`"receipt_schema": "asof-gate/receipt/1"`) is not a
+tampered version 2 receipt and is not treated as one: the version 2 verifier checks nothing
+about it, says which format it is, and exits 1. Version 1 receipts verify with the version 1
+specification and verifier, which are kept at the git tag `v1`.
 
 ## Inputs
 
@@ -316,6 +319,9 @@ would not.
 ## Verifier
 
 `python verifier/verify_receipt.py RECEIPT --case CASE_FILE --rulebook RULEBOOK --impacts TABLE`
+
+A receipt whose `receipt_schema` is not `asof-gate/receipt/2` is not checked. The verifier
+says so, names the tag `v1` for version 1 receipts, and exits 1.
 
 Exit 0 only when all of these hold:
 1. the case file, rulebook and impact table hash to the values recorded in the receipt,

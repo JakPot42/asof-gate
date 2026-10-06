@@ -8,6 +8,20 @@ caught is the kind that counts toward a State's SNAP payment error rate.
 Everything here is a demonstration on synthetic households. No real person, employer or
 landlord appears in it.
 
+> **Version 1 receipts.** This is version 2, and its receipts use a new format
+> (`asof-gate/receipt/2`). The four receipts published with version 1
+> (`asof-gate/receipt/1`: `clear_sep30`, `clear_oct01`, `stale_constant`, `inferred_fact`) do
+> not verify here, and are not meant to. They are not invalid. They verify, unchanged, with
+> the version 1 verifier at the git tag `v1`:
+>
+> ```
+> git checkout v1
+> python verifier/verify_receipt.py receipts/stale_constant.json >     --case fixtures/cases/case_income_stated.txt --rulebook rules/snap_max_allotment.json
+> ```
+>
+> Given a version 1 receipt, the version 2 verifier checks nothing, says which format it is,
+> names the tag, and exits 1. It does not report it as tampered.
+
 ## The errors it stops
 
 Each case file holds the documents an intake step would read: an application, pay stubs, a

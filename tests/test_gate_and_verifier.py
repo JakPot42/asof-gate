@@ -323,6 +323,17 @@ def test_verifier_rejects_forgery_with_recomputed_hash(tmp_path, forgery):
     assert res.returncode == 1, f"{forgery} was accepted:\n{res.stdout}"
 
 
+def test_a_version_1_receipt_is_named_as_such_and_not_called_tampered(tmp_path):
+    v1 = rehash({"receipt_schema": "asof-gate/receipt/1", "rulebook": "snap-max-allotment-48-states-dc",
+                 "rulebook_version": "1", "inputs": {}, "citations": {},
+                 "decision": {"decision_date": "2026-10-01", "verdict": "STOP", "findings": []}})
+    res = run_verifier(write(tmp_path, v1), ROOT / "fixtures" / "cases" / "case_a.json")
+    assert res.returncode == 1
+    assert "asof-gate/receipt/1" in res.stdout and "git tag v1" in res.stdout
+    assert "Nothing about it was checked" in res.stdout
+    assert "does not hash" not in res.stdout and "differ" not in res.stdout
+
+
 def test_verifier_rejects_edit_without_rehash(tmp_path):
     fx, r = receipt_for("superseded_document")
     r["decision"]["impact"]["counts_toward_payment_error_rate"] = False

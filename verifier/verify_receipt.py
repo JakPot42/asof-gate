@@ -535,6 +535,11 @@ def verify(receipt_path: Path, case_path: Path, rulebook_path: Path, impacts_pat
     """Return a list of failed checks; empty means the receipt verifies."""
     problems = []
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if receipt.get("receipt_schema") != SCHEMA:
+        # Not checked at all: a version 1 receipt is a different format, not a tampered one.
+        return [f"this receipt's schema is {receipt.get('receipt_schema')!r}, not {SCHEMA!r}. "
+                "Nothing about it was checked. A version 1 receipt (asof-gate/receipt/1) "
+                "verifies with the verifier at the git tag v1"]
     case_bytes, rb_bytes = case_path.read_bytes(), rulebook_path.read_bytes()
     table_bytes = impacts_path.read_bytes()
     recorded = receipt.get("inputs", {})
