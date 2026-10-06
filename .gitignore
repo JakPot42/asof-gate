@@ -1,2 +1,8 @@
 __pycache__/
 .pytest_cache/
+
+# Local only, never committed: the MP4 the tape renders next to the GIF, and anything from the
+# America.gov audit, which has its own folder and its own publication rules.
+demo/*.mp4
+demo/america.gov-question.pdf
+*america.gov*

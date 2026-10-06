@@ -5,6 +5,16 @@ benefit is computed. It stops the case when a fact does not trace to the househo
 documents, or a legal figure is not the one in force, and it says whether the mistake it
 caught is the kind that counts toward a State's SNAP payment error rate.
 
+![Terminal demo, about one minute, on a synthetic case. It shows a pay stub with regular pay of 1000 and a one-time bonus of 600. The gate is given a monthly income of 2795, which counts the bonus as regular pay, and stops: the pay stubs give 2150, an underpayment of $154 a month that counts toward the payment error rate. A second case attributes a student's pay stubs to the parent, and the gate stops it as a wrongful denial of $510 a month that does not count toward the payment error rate. The independent verifier then accepts the real receipt and rejects a forged copy whose label was changed to "does not count".](demo/asof-gate.gif)
+
+The script is `demo/asof-gate.tape`, rendered with [VHS](https://github.com/charmbracelet/vhs)
+from a fresh clone of this repository. Every command on screen is real and its output is
+shown as produced, cut to four lines by the `head -4` you can see. The households are
+synthetic, and the "AI intake step" is a fixture written by hand, not the output of a model.
+The $58 tolerance on screen is the fiscal year 2026 one, carried forward as described below.
+`docs/RECORDING_PLAN.md` lists what the recording shows and what it must not claim. The
+recording of version 1 is at the git tag `v1`.
+
 Everything here is a demonstration on synthetic households. No real person, employer or
 landlord appears in it.
 
@@ -262,15 +272,3 @@ time recomputing the hash. The verifier rejects all seventeen.
   fixture.
 - **Not a signature scheme, and no interface.** Receipts are recomputable, not signed. Command
   line only.
-
-## Demo recording
-
-![Terminal demo, about one minute, on a synthetic case. It shows a pay stub with regular pay of 1000 and a one-time bonus of 600. The gate is given a monthly income of 2795, which counts the bonus as regular pay, and stops: the pay stubs give 2150, an underpayment of $154 a month that counts toward the payment error rate. A second case attributes a student's pay stubs to the parent, and the gate stops it as a wrongful denial of $510 a month that does not count toward the payment error rate. The independent verifier then accepts the real receipt and rejects a forged copy whose label was changed to "does not count".](demo/asof-gate.gif)
-
-The script is `demo/asof-gate.tape`, rendered with [VHS](https://github.com/charmbracelet/vhs)
-from a fresh clone of this repository. Every command on screen is real and its output is
-shown as produced, cut to four lines by the `head -4` you can see. The households are
-synthetic, and the "AI intake step" is a fixture written by hand, not the output of a model.
-The $58 tolerance on screen is the fiscal year 2026 one, carried forward as described above.
-`docs/RECORDING_PLAN.md` lists what the recording shows and what it must not claim. The
-recording of version 1 is at the git tag `v1`.
