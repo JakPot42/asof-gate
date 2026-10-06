@@ -16,7 +16,7 @@ landlord appears in it.
 >
 > ```
 > git checkout v1
-> python verifier/verify_receipt.py receipts/stale_constant.json >     --case fixtures/cases/case_income_stated.txt --rulebook rules/snap_max_allotment.json
+> python verifier/verify_receipt.py receipts/stale_constant.json --case fixtures/cases/case_income_stated.txt --rulebook rules/snap_max_allotment.json
 > ```
 >
 > Given a version 1 receipt, the version 2 verifier checks nothing, says which format it is,
@@ -202,7 +202,7 @@ python -m pytest -q
 
 The gate exits 0 when the action is clear and 2 when it stops. The verifier exits 0 only when
 the receipt it recomputes is byte-identical to the one it was given, and 1 otherwise. The
-test suite takes about nine minutes, most of it the planted-bug runs.
+test suite takes about ten minutes, most of it the planted-bug runs.
 
 To recheck the benefit amounts, with `policyengine-us==2.24.5` installed:
 
