@@ -1,54 +1,75 @@
-# Recording plan (for review before recording)
+# Recording plan
 
-> This plan, and `demo/asof-gate.tape`, describe the recording of the earlier version (commit
-> `1872ca7`). The fixtures it names were replaced in version 2. A new plan has not been written
-> and nothing has been re-recorded.
+**Length:** about 60 seconds. **Format:** terminal only, one window, 1920 by 1080, large font.
+Captions are on-screen text. Nothing is typed that is not in `demo/asof-gate.tape`, which is
+the script. Recorded from a fresh clone.
 
-**Length:** 30 to 45 seconds. **Format:** terminal only, one window, large font, width at least
-110 columns so no message wraps mid-word. Captions are on-screen text. Nothing is typed live that
-is not in this plan. Recorded from a fresh clone.
+The plan and tape for the earlier version (one figure, $546 to $562) are at the git tag `v1`.
 
-## Beat 1: the rule change (8 to 10 s)
+## Beat 1: the document (about 9 s)
 
-Show `rules/snap_max_allotment.json`, scrolled to the two versions.
+    grep -A9 '"PS-4"' fixtures/cases/case_a.json | grep -E 'id|regular_gross|one_time_bonus|gross_total'
 
-Caption: *"SNAP maximum allotment, household of two. $546 through 30 September 2026. $562 from
-1 October, per USDA's FY 2027 memo, page 4."*
+On screen: the latest pay stub, regular gross 1000, one-time bonus 600, gross total 1600.
 
-## Beat 2: the stale constant stops (12 to 15 s)
+Caption: *"In this synthetic case, an AI intake step counts the one-time $600 bonus as regular
+pay."*
 
-    python -m asof_gate fixtures/stale_constant.json --out receipts/stale_constant.json
+## Beat 2: an error that counts (about 13 s)
 
-On screen: `verdict: STOP` and the message: 546 is present but not in force on 2026-10-01,
-delta +16, supply 562 from a source in force on that date.
+    python -m asof_gate fixtures/fact_not_in_source.json | head -4 | fold -s -w 100
 
-Caption: *"Given last year's figure, it stops and says what is out of date."*
+On screen: `verdict: STOP`; 2795 is not supported by PS-3, PS-4, which give 2150; an
+underpayment of $154 a month that counts toward the payment error rate, against the $58
+tolerance, which the output says is the last USDA has published.
 
-## Beat 3: anyone can recompute the stop (12 to 15 s)
+Caption: *"The gate stops it before the benefit is computed: $154 a month short, an error that
+counts toward the State's payment error rate."*
 
-    python verifier/verify_receipt.py receipts/stale_constant.json --case fixtures/cases/case_income_stated.txt --rulebook rules/snap_max_allotment.json
+## Beat 3: a harm that does not count (about 14 s)
 
-On screen: `OK ... recomputed independently, byte-identical. verdict STOP`.
+    python -m asof_gate fixtures/wrong_person.json | head -4 | fold -s -w 100
 
-Then the same command on `forged_clear.json`: a copy with the verdict edited to CLEAR and the
-hash recomputed. On screen: `FAIL` and `verdict differs: recomputed STOP, receipt says CLEAR`.
+On screen: `verdict: STOP`; PS-3, PS-4 name p2, not p1; a wrongful denial of $510 a month that
+does not count toward the payment error rate.
 
-Caption: *"A separate verifier, sharing no code, rebuilds the receipt from the published rule."*
+Caption: *"A student's pay stubs attributed to the parent: the family is wrongly denied $510 a
+month. It never shows in the error rate. The gate stops it anyway."*
 
-## Optional beat: the inferred fact (5 s, only if the cut runs under 40 s)
+## Beat 4: anyone can recompute the label (about 15 s)
 
-    python -m asof_gate fixtures/inferred_fact.json
+    python verifier/verify_receipt.py receipts/fact_not_in_source.json --case fixtures/cases/case_a.json --rulebook rules/snap_fy2027_48dc.json --impacts impacts/policyengine.json
 
-On screen: `STOP` and `monthly_net_income = 0: not entailed`. No caption.
+On screen: `OK ... recomputed independently, byte-identical. verdict STOP ... counts toward the
+payment error rate`.
 
-## Before recording
+Then the same command on `forged_label.json`. On screen: `FAIL` and `recomputed impact and
+error-rate label differ from the receipt's`.
 
-- `forged_clear.json` is made off camera by a one-line script kept out of the repository, which
-  edits only the verdict and recomputes the hash. It is not committed.
+Caption: *"A separate verifier, sharing no code, recomputes the verdict and the label. Change
+the label and it fails."*
+
+## Not in the recording
+
+The $16 stale-figure case (`fixtures/stale_figure.json`) and the stale-table case. They are in
+the README.
+
+## Off camera
+
+- The fresh clone.
+- `forged_label.json`, made by a one-line script in the tape. It is the committed
+  `fact_not_in_source` receipt with its label flipped to "does not count", its message reworded
+  to match, and its hash recomputed. Nothing else differs. It is not committed.
+- The caption functions.
 
 ## Claims the recording must not make
 
-- That the statute sets $562. It sets the method; USDA publishes the figure.
-- That this computes or checks a benefit amount.
+- That the statute sets any dollar figure. It sets the method; USDA publishes the figures.
+- That $58 is the fiscal year 2027 threshold. It is the fiscal year 2026 one, carried forward
+  because none is published for these dates.
+- That the verifier recomputes the dollar amounts. It recomputes the verdict, the findings and
+  the label; the amounts are PolicyEngine's.
+- That these are real households.
+- That a real AI model produced these errors. The intake step is a fixture written by hand.
 - That the receipt hash proves authenticity. Recomputation does.
 - That this is a product or has users.
