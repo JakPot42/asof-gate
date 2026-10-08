@@ -5,13 +5,13 @@
     "version": "2.24.5"
   },
   "results": {
-    "19a63919896fe3c19537e470bb343ea13edeb495d98896eae327e82ea6c9f2b3": {
+    "47b776a2f4b8096079453ea011ca6f84c745bfc562f1771773c39a7122692223": {
       "detail": {
-        "adjusted_gross_income": "432000.00",
-        "income_tax_unrounded": "82286.00",
-        "taxable_income": "400500.00"
+        "adjusted_gross_income": "144000.00",
+        "income_tax_unrounded": "14578.00",
+        "taxable_income": "112500.00"
       },
-      "income_tax": 82286,
+      "income_tax": 14578,
       "inputs": {
         "figures": {
           "standard_deduction": 31500
@@ -30,23 +30,58 @@
         "tax_year": 2025,
         "wages": [
           {
-            "amount": 204000,
+            "amount": 68000,
             "person": "spouse"
           },
           {
-            "amount": 228000,
+            "amount": 76000,
             "person": "taxpayer"
           }
         ]
       }
     },
-    "36eadba19781386719f8850aad9be702405625511c6bc0cb5910229aa6411fc4": {
+    "64e0ee294c1f154bb63c5c10207e90672389f19055bfcfc9a510acb7811e232b": {
       "detail": {
-        "adjusted_gross_income": "440000.00",
-        "income_tax_unrounded": "85326.00",
-        "taxable_income": "410000.00"
+        "adjusted_gross_income": "136000.00",
+        "income_tax_unrounded": "12818.00",
+        "taxable_income": "104500.00"
       },
-      "income_tax": 85326,
+      "income_tax": 12818,
+      "inputs": {
+        "figures": {
+          "standard_deduction": 31500
+        },
+        "filing_status": "joint",
+        "persons": [
+          {
+            "age": 44,
+            "id": "spouse"
+          },
+          {
+            "age": 45,
+            "id": "taxpayer"
+          }
+        ],
+        "tax_year": 2025,
+        "wages": [
+          {
+            "amount": 68000,
+            "person": "spouse"
+          },
+          {
+            "amount": 68000,
+            "person": "taxpayer"
+          }
+        ]
+      }
+    },
+    "a3c0781944e051af59dc5ec04a47821dfbe8008f2de1a0167f345dc096ba18cd": {
+      "detail": {
+        "adjusted_gross_income": "150000.00",
+        "income_tax_unrounded": "16228.00",
+        "taxable_income": "120000.00"
+      },
+      "income_tax": 16228,
       "inputs": {
         "figures": {
           "standard_deduction": 30000
@@ -65,23 +100,23 @@
         "tax_year": 2025,
         "wages": [
           {
-            "amount": 204000,
+            "amount": 68000,
             "person": "spouse"
           },
           {
-            "amount": 236000,
+            "amount": 82000,
             "person": "taxpayer"
           }
         ]
       }
     },
-    "3719c8829d3b0a8c3c4865dd6d4aa7beefbee1ed069cead6c6667a37219b3ddd": {
+    "bedcf924b2b2f9f76c434925a689889a0a72ee91e34acb61feb5d7ff4ec74440": {
       "detail": {
-        "adjusted_gross_income": "408000.00",
-        "income_tax_unrounded": "76054.00",
-        "taxable_income": "376500.00"
+        "adjusted_gross_income": "150000.00",
+        "income_tax_unrounded": "15898.00",
+        "taxable_income": "118500.00"
       },
-      "income_tax": 76054,
+      "income_tax": 15898,
       "inputs": {
         "figures": {
           "standard_deduction": 31500
@@ -100,46 +135,11 @@
         "tax_year": 2025,
         "wages": [
           {
-            "amount": 204000,
+            "amount": 68000,
             "person": "spouse"
           },
           {
-            "amount": 204000,
-            "person": "taxpayer"
-          }
-        ]
-      }
-    },
-    "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f": {
-      "detail": {
-        "adjusted_gross_income": "440000.00",
-        "income_tax_unrounded": "84846.00",
-        "taxable_income": "408500.00"
-      },
-      "income_tax": 84846,
-      "inputs": {
-        "figures": {
-          "standard_deduction": 31500
-        },
-        "filing_status": "joint",
-        "persons": [
-          {
-            "age": 44,
-            "id": "spouse"
-          },
-          {
-            "age": 45,
-            "id": "taxpayer"
-          }
-        ],
-        "tax_year": 2025,
-        "wages": [
-          {
-            "amount": 204000,
-            "person": "spouse"
-          },
-          {
-            "amount": 236000,
+            "amount": 82000,
             "person": "taxpayer"
           }
         ]

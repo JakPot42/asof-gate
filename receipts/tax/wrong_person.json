@@ -20,10 +20,12 @@
         "key": "joint",
         "parameter": "standard_deduction",
         "pdf_page": 9,
+        "read_as_of": "2026-03-10",
         "role": "states the figure in force",
         "section": "section 3.01",
         "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
         "source_id": "irs-rev-proc-2025-32",
+        "tax_year": 2025,
         "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
         "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
         "value": 31500
@@ -46,9 +48,9 @@
           "date": "2026-02-17",
           "id": "W2C-1"
         },
-        "in_force_value": 236000,
+        "in_force_value": 82000,
         "kind": "FACT_MISSING",
-        "message": "wages for taxpayer: W2-1 is in the case file and no entry reads it. In force: 236000 (W2C-1).",
+        "message": "wages for taxpayer: W2-1 is in the case file and no entry reads it. In force: 82000 (W2C-1).",
         "person": "taxpayer",
         "subject": "wages"
       },
@@ -57,27 +59,27 @@
         "document_person": "spouse",
         "entry": 0,
         "kind": "WRONG_PERSON",
-        "message": "wages for taxpayer = 204000: present in a source, but not in taxpayer's document: W2-2 names spouse. In force for taxpayer: 236000 (W2C-1, correcting W2-1).",
+        "message": "wages for taxpayer = 68000: present in a source, but not in taxpayer's document: W2-2 names spouse. In force for taxpayer: 82000 (W2C-1, correcting W2-1).",
         "person": "taxpayer",
         "person_in_force": [
           {
             "document": "W2-1",
             "in_force_date": "2026-02-17",
             "in_force_document": "W2C-1",
-            "value": 236000
+            "value": 82000
           }
         ],
         "subject": "wages",
-        "supplied_value": 204000,
-        "supported_value": 236000
+        "supplied_value": 68000,
+        "supported_value": 82000
       }
     ],
     "impact": {
       "class": "tax_understated",
-      "error": -8792,
-      "message": "Federal income tax would be understated by $8792: $76054 as proposed, $84846 on the documents and figures in force.",
+      "error": -3080,
+      "message": "Federal income tax would be understated by $3080: $12818 as proposed, $15898 on the documents and figures in force.",
       "proposed": {
-        "income_tax": 76054,
+        "income_tax": 12818,
         "inputs": {
           "figures": {
             "standard_deduction": 31500
@@ -96,20 +98,20 @@
           "tax_year": 2025,
           "wages": [
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "spouse"
             },
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "taxpayer"
             }
           ]
         },
-        "inputs_sha256": "3719c8829d3b0a8c3c4865dd6d4aa7beefbee1ed069cead6c6667a37219b3ddd"
+        "inputs_sha256": "64e0ee294c1f154bb63c5c10207e90672389f19055bfcfc9a510acb7811e232b"
       },
       "status": "computed",
       "supported": {
-        "income_tax": 84846,
+        "income_tax": 15898,
         "inputs": {
           "figures": {
             "standard_deduction": 31500
@@ -128,16 +130,16 @@
           "tax_year": 2025,
           "wages": [
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "spouse"
             },
             {
-              "amount": 236000,
+              "amount": 82000,
               "person": "taxpayer"
             }
           ]
         },
-        "inputs_sha256": "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f"
+        "inputs_sha256": "bedcf924b2b2f9f76c434925a689889a0a72ee91e34acb61feb5d7ff4ec74440"
       }
     },
     "verdict": "STOP"
@@ -152,13 +154,13 @@
           "document": "W2-2",
           "name": "wages",
           "person": "taxpayer",
-          "value": 204000
+          "value": 68000
         },
         {
           "document": "W2-2",
           "name": "wages",
           "person": "spouse",
-          "value": 204000
+          "value": 68000
         }
       ],
       "numbers": [
@@ -171,12 +173,12 @@
       "program": "FORM_1040",
       "tax_year": 2025
     },
-    "case_file_sha256": "b40faf3a66a093f66abaf78d979ee78cebc41254ee205e84a4bbd1d865ab8e41",
-    "impact_table_sha256": "65906c051336235b636176bbfa76c296d713a6c51ed62ad54c8f1d70945a7039",
-    "rulebook_sha256": "5667250381eb90b291dc147962db35e004cc4136d3f8920aba9ac1e62d5ffc5d"
+    "case_file_sha256": "ee4309830f5816d08789382d98e555c7df372d607446bf2ec965187ef873ad7e",
+    "impact_table_sha256": "cc237861029492ffcd2985775df5ed1d2f4d53732c3d791fb7f3f72822fd2ea1",
+    "rulebook_sha256": "2c1ade7db3072661e6783713cd18fbd5c69b2d3e3baf19b509cea9535c4b47c0"
   },
   "receipt_schema": "asof-gate/tax-receipt/1",
-  "receipt_sha256": "a96bd47a4f2a9841edc69e30f86005f9109ec9564630c17c3f67e87409ab08bd",
+  "receipt_sha256": "bf62daff983fbb807bfba8c49db8d08d3928d32fe6fa86b3ddfba18fdb64154f",
   "rulebook": "form-1040-tax-year-2025",
   "rulebook_version": "1"
 }

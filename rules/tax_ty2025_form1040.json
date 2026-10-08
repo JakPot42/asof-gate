@@ -48,11 +48,13 @@
   "standard_deduction": {
    "unit": "USD per return",
    "by": "filing_status",
+   "applies_to_tax_year": 2025,
+   "two_dates": "Every version below is a figure for tax year 2025. effective_from and effective_to are not the period the figure applies to. They are the dates between which the law, read on that day, gave that figure for tax year 2025.",
    "versions": [
     {
      "effective_from": "2024-10-22",
      "effective_to": "2025-07-03",
-     "dates": "From the date Rev. Proc. 2024-40 says its figures are as of (PDF page 4) to the day before Public Law 119-21 was enacted.",
+     "dates": "The published figure for tax year 2025 from October 22, 2024, the date Rev. Proc. 2024-40 says its figures are as of (PDF page 4), until the day before Public Law 119-21 was enacted.",
      "source_id": "irs-rev-proc-2024-40",
      "pdf_page": 12,
      "section": "section 2.15(1)",
@@ -67,7 +69,7 @@
     {
      "effective_from": "2025-07-04",
      "effective_to": "9999-12-31",
-     "dates": "From the enactment of Public Law 119-21 on July 4, 2025. Its section 70102(c) applies the amounts to the whole of tax year 2025.",
+     "dates": "The figure for tax year 2025 as the law reads on any date from July 4, 2025, when Public Law 119-21 was enacted. The change is retroactive: section 70102(c) applies it to taxable years beginning after December 31, 2024.",
      "source_id": "irs-rev-proc-2025-32",
      "pdf_page": 9,
      "section": "section 3.01",

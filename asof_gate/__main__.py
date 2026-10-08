@@ -54,16 +54,18 @@ def _tax(fixture: dict, a) -> int:
         _say(f"- {f['kind']}: {f['message']}", "  ")
     _say(f"impact: {dec['impact']['message']}", "  ")
     for fig in cit["figures"]:
-        line = (f"figure in force: {fig['parameter']}[{fig['key']}] = {fig['value']} "
+        line = (f"figure for tax year {fig['tax_year']}, as the law reads on {fig['read_as_of']}: "
+                f"{fig['parameter']}[{fig['key']}] = {fig['value']} "
                 f"({fig['source_id']}, {fig['section']}, PDF page {fig['pdf_page']})")
         if fig["enacted_by"]:
             e = fig["enacted_by"]
             line += f"; enacted by {e['source_id']}, {e['section']}, PDF page {e['pdf_page']}"
         _say(line, "  ")
     for fig in cit["superseded_figures"]:
-        _say(f"superseded figure: {fig['parameter']}[{fig['key']}] = {fig['value']} "
-             f"({fig['source_id']}, {fig['section']}, PDF page {fig['pdf_page']}), in force "
-             f"{fig['effective_from']} to {fig['effective_to']}", "  ")
+        _say(f"superseded figure for tax year {fig['tax_year']}: {fig['parameter']}[{fig['key']}] "
+             f"= {fig['value']} ({fig['source_id']}, {fig['section']}, PDF page "
+             f"{fig['pdf_page']}), the published figure from {fig['effective_from']} to "
+             f"{fig['effective_to']}", "  ")
     _say(f"tax amounts: {cit['impact_engine']['name']} {cit['impact_engine']['version']} "
          f"({cit['impact_engine']['role']})", "  ")
     _say(f"authority: {cit['authority']['citation']} ({cit['authority']['role']})", "  ")

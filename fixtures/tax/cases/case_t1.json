@@ -23,7 +23,7 @@
    "payer": "Northfield Analytics (synthetic employer)",
    "date": "2026-01-22",
    "tax_year": 2025,
-   "box1_wages": 228000
+   "box1_wages": 76000
   },
   {
    "id": "W2-2",
@@ -32,7 +32,7 @@
    "payer": "Lakeshore Clinic Group (synthetic employer)",
    "date": "2026-01-27",
    "tax_year": 2025,
-   "box1_wages": 204000
+   "box1_wages": 68000
   },
   {
    "id": "W2C-1",
@@ -43,12 +43,12 @@
    "tax_year": 2025,
    "corrects": "W2-1",
    "previously_reported": {
-    "box1_wages": 228000
+    "box1_wages": 76000
    },
    "correct_information": {
-    "box1_wages": 236000
+    "box1_wages": 82000
    },
-   "explanation": "A year-end bonus of 8000 paid in December 2025 was left out of Box 1 on the original form."
+   "explanation": "A year-end bonus of 6000 paid in December 2025 was left out of Box 1 on the original form."
   }
  ]
 }

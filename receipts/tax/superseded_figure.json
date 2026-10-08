@@ -20,10 +20,12 @@
         "key": "joint",
         "parameter": "standard_deduction",
         "pdf_page": 9,
+        "read_as_of": "2026-03-10",
         "role": "states the figure in force",
         "section": "section 3.01",
         "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
         "source_id": "irs-rev-proc-2025-32",
+        "tax_year": 2025,
         "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
         "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
         "value": 31500
@@ -45,6 +47,7 @@
         "section": "section 2.15(1)",
         "sha256": "4de9db6b6662b5c305a59100a027051628823b42fd5817ea4e383ad4c302af1f",
         "source_id": "irs-rev-proc-2024-40",
+        "tax_year": 2025,
         "title": "Rev. Proc. 2024-40 (inflation-adjusted items for taxable years beginning in 2025)",
         "url": "https://www.irs.gov/pub/irs-drop/rp-24-40.pdf",
         "value": 30000
@@ -72,7 +75,7 @@
         "in_force_value": 31500,
         "key": "joint",
         "kind": "NUMBER_NOT_IN_FORCE",
-        "message": "standard_deduction[joint]: 30000 is present but not in force on 2026-03-10; it was in force 2024-10-22 to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). In force on 2026-03-10: 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted by public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500. To clear, supply 31500 from a source in force on 2026-03-10.",
+        "message": "standard_deduction[joint] for tax year 2025: 30000 is present but not in force as the law reads on 2026-03-10. It was the published figure for tax year 2025 from 2024-10-22 to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). As read on 2026-03-10, the figure for tax year 2025 is 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted by public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500. To clear, supply 31500 from the source in force on 2026-03-10.",
         "reason": "value_out_of_date",
         "subject": "standard_deduction",
         "superseded": {
@@ -83,15 +86,16 @@
         "supplied_effective_from": "2024-10-22",
         "supplied_effective_to": "2025-07-03",
         "supplied_source_id": "irs-rev-proc-2024-40",
-        "supplied_value": 30000
+        "supplied_value": 30000,
+        "tax_year": 2025
       }
     ],
     "impact": {
       "class": "tax_overstated",
-      "error": 480,
-      "message": "Federal income tax would be overstated by $480: $85326 as proposed, $84846 on the documents and figures in force.",
+      "error": 330,
+      "message": "Federal income tax would be overstated by $330: $16228 as proposed, $15898 on the documents and figures in force.",
       "proposed": {
-        "income_tax": 85326,
+        "income_tax": 16228,
         "inputs": {
           "figures": {
             "standard_deduction": 30000
@@ -110,20 +114,20 @@
           "tax_year": 2025,
           "wages": [
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "spouse"
             },
             {
-              "amount": 236000,
+              "amount": 82000,
               "person": "taxpayer"
             }
           ]
         },
-        "inputs_sha256": "36eadba19781386719f8850aad9be702405625511c6bc0cb5910229aa6411fc4"
+        "inputs_sha256": "a3c0781944e051af59dc5ec04a47821dfbe8008f2de1a0167f345dc096ba18cd"
       },
       "status": "computed",
       "supported": {
-        "income_tax": 84846,
+        "income_tax": 15898,
         "inputs": {
           "figures": {
             "standard_deduction": 31500
@@ -142,16 +146,16 @@
           "tax_year": 2025,
           "wages": [
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "spouse"
             },
             {
-              "amount": 236000,
+              "amount": 82000,
               "person": "taxpayer"
             }
           ]
         },
-        "inputs_sha256": "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f"
+        "inputs_sha256": "bedcf924b2b2f9f76c434925a689889a0a72ee91e34acb61feb5d7ff4ec74440"
       }
     },
     "verdict": "STOP"
@@ -166,13 +170,13 @@
           "document": "W2C-1",
           "name": "wages",
           "person": "taxpayer",
-          "value": 236000
+          "value": 82000
         },
         {
           "document": "W2-2",
           "name": "wages",
           "person": "spouse",
-          "value": 204000
+          "value": 68000
         }
       ],
       "numbers": [
@@ -185,12 +189,12 @@
       "program": "FORM_1040",
       "tax_year": 2025
     },
-    "case_file_sha256": "b40faf3a66a093f66abaf78d979ee78cebc41254ee205e84a4bbd1d865ab8e41",
-    "impact_table_sha256": "65906c051336235b636176bbfa76c296d713a6c51ed62ad54c8f1d70945a7039",
-    "rulebook_sha256": "5667250381eb90b291dc147962db35e004cc4136d3f8920aba9ac1e62d5ffc5d"
+    "case_file_sha256": "ee4309830f5816d08789382d98e555c7df372d607446bf2ec965187ef873ad7e",
+    "impact_table_sha256": "cc237861029492ffcd2985775df5ed1d2f4d53732c3d791fb7f3f72822fd2ea1",
+    "rulebook_sha256": "2c1ade7db3072661e6783713cd18fbd5c69b2d3e3baf19b509cea9535c4b47c0"
   },
   "receipt_schema": "asof-gate/tax-receipt/1",
-  "receipt_sha256": "b17ecac614c97b54ef9947ae6e11feac784448724ca09301ef05299016c6a538",
+  "receipt_sha256": "81eb3c001758364e8091f9c41c860e506346d983443396206496a55984dc876c",
   "rulebook": "form-1040-tax-year-2025",
   "rulebook_version": "1"
 }

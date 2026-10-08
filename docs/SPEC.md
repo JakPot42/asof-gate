@@ -359,9 +359,9 @@ instead, in the same words a stop for a superseded figure uses: present, but not
 2. **The case file**: `tax_year`, `filing_status`, the `persons` on the return (`id`, `age`)
    and the `documents`. A `w2` has an integer `box1_wages`. A `w2c` has `corrects` (the id of
    the `w2` it corrects) and `correct_information` (the fields it restates, as integers).
-3. **The rulebook**: each legal figure by filing status, with the dates it is in force, the
-   document, section and PDF page that print it, and, where a statute changed it, the statute
-   (`enacted_by`).
+3. **The rulebook**: each legal figure by filing status, with the tax year it applies to, the
+   dates between which the law read that way (see "Two dates"), the document, section and PDF
+   page that print it, and, where a statute changed it, the statute (`enacted_by`).
 4. **The impact table**: tax amounts computed outside the gate, keyed by the hash of the
    inputs they were computed from (Rule T3).
 
@@ -433,11 +433,39 @@ stopped like one that misreads it.
 Step 7 applies whenever the cited document is not the one in force, even if the value supplied
 happens to be right. The entry must cite the document that states the value.
 
+### Two dates
+
+A figure on this path has two dates, and they are different things.
+
+- **The period it applies to**: the tax year. Every version of a parameter in the rulebook is
+  a figure for the same tax year (`applies_to_tax_year`), and the action's `tax_year` says
+  which return is being prepared. Findings and citations carry it as `tax_year`.
+- **The date the law is read**: the decision date, the day the return is prepared. A version's
+  `effective_from` and `effective_to` are dates of this kind. They say between which days the
+  law, read on that day, gave that figure for the tax year. They do not say which income the
+  figure applies to.
+
+The two come apart when a figure is changed retroactively. Public Law 119-21 was enacted on
+4 July 2025 and applies its standard deduction to taxable years beginning after 31 December
+2024. So for tax year 2025:
+
+- read on any date from 22 October 2024 to 3 July 2025, the figure for a joint return is
+  $30,000, the published figure (Rev. Proc. 2024-40);
+- read on any date from 4 July 2025, the figure for the same tax year is $31,500.
+
+A return for tax year 2025 prepared on 1 June 2025 with $30,000 used the figure in force. The
+same return prepared on 10 March 2026 with $30,000 did not, although nothing about the tax
+year changed. "In force" below always means in force as the law reads on the decision date,
+for the tax year of the return.
+
 ### Rule T2: every legal figure is the one in force on the decision date
 
 If the case file's `filing_status` is not in the rulebook's `filing_statuses`: finding
 `OUT_OF_SCOPE`, and Rule T2 is not applied. Otherwise it is Rule 2 above, with the filing
-status as the cell of every parameter. A `NUMBER_NOT_IN_FORCE` finding also carries:
+status as the cell of every parameter, and a version is in force when the decision date falls
+between its `effective_from` and `effective_to`. Every finding of Rule T2 except
+`UNKNOWN_PARAMETER` carries `tax_year`, from the action. A `NUMBER_NOT_IN_FORCE` finding also
+carries:
 
 - `in_force`: `{"source_id", "section", "pdf_page"}` of the version in force;
 - `enacted_by`: the same three for that version's `enacted_by`, or null;
@@ -494,9 +522,10 @@ Each side is `{"inputs", "inputs_sha256", "income_tax"}`.
 
 `{who}` is `wages for {person} = {supplied_value}`. `{label}` and `{box}` come from the field
 rule (`Form W-2`, `Box 1`). `{cite X}` is `{source_id}, {section}, PDF page {pdf_page}` of `X`.
-`{delta}` is written with a sign. `{name}` is `{subject}[{key}]`, or `{subject}` for
-`UNKNOWN_PARAMETER`. Findings of kind `FACT_NOT_IN_SOURCE` and `SUPERSEDED_DOCUMENT` carry
-`decision_date`.
+`{delta}` is written with a sign. `{year}` is `tax year {tax_year}`. `{name}` is
+`{subject}[{key}] for {year}`, or `{subject}` for `UNKNOWN_PARAMETER`. Findings of kind
+`FACT_NOT_IN_SOURCE` and `SUPERSEDED_DOCUMENT` carry `decision_date`. The messages about
+figures name both dates: the tax year the figure is for, and the day the law is read.
 
 - `FACT_MISSING`: `wages for {person}: {document} is in the case file and no entry reads it. In force: {in_force_value} ({in_force_document id}).`
 - `OUT_OF_SCOPE`: `filing_status = {supplied_value}: outside the filing statuses this rulebook covers.`
@@ -514,14 +543,14 @@ rule (`Form W-2`, `Box 1`). `{cite X}` is `{source_id}, {section}, PDF page {pdf
   `{value} ({document})` when the form itself is in force and
   `{value} ({in_force_document}, correcting {document})` otherwise.
 - `SUPERSEDED_DOCUMENT`: `{who}: {box} of {superseded id} ({date}) is present but superseded on {decision_date}, corrected by {in force id} ({date}). In force: {in_force_value} ({in force id}). Delta {delta}. To clear, supply {in_force_value} from {in force id}.`
-- `NUMBER_MISSING`: `{name}: not supplied. The return needs the value in force on {decision_date}.`
-- `NUMBER_NO_VERSION_IN_FORCE`: `{name}: no version in the rulebook is in force on {decision_date}.`
+- `NUMBER_MISSING`: `{name}: not supplied. The return needs the figure as the law reads on {decision_date}.`
+- `NUMBER_NO_VERSION_IN_FORCE`: `{name}: the rulebook has no figure as the law read on {decision_date}.`
 - `UNKNOWN_PARAMETER`: `{name}: not a parameter in this rulebook.`
 - `NUMBER_NOT_IN_FORCE`. `{now}` is `{in_force_value} ({cite in_force})` and, when `enacted_by`
   is not null, `, enacted by {cite enacted_by}`.
-  - `value_out_of_date`: `{name}: {supplied_value} is present but not in force on {decision_date}; it was in force {supplied_effective_from} to {supplied_effective_to} ({cite superseded}). In force on {decision_date}: {now}. Delta {delta}. To clear, supply {in_force_value} from a source in force on {decision_date}.`
-  - `source_not_in_force`: `{name}: {supplied_value} is the value in force on {decision_date}, but the cited source {supplied_source_id} is not the one in force. To clear, cite {in_force source_id}.`
-  - `value_unknown`: `{name}: {supplied_value} is not a value of this parameter in any version. In force on {decision_date}: {now}. Delta {delta}.`
+  - `value_out_of_date`: `{name}: {supplied_value} is present but not in force as the law reads on {decision_date}. It was the published figure for {year} from {supplied_effective_from} to {supplied_effective_to} ({cite superseded}). As read on {decision_date}, the figure for {year} is {now}. Delta {delta}. To clear, supply {in_force_value} from the source in force on {decision_date}.`
+  - `source_not_in_force`: `{name}: {supplied_value} is the figure as the law reads on {decision_date}, but the cited source {supplied_source_id} is not the one in force. To clear, cite {in_force source_id}.`
+  - `value_unknown`: `{name}: {supplied_value} was never the published figure for {year}. As read on {decision_date}, the figure for {year} is {now}. Delta {delta}.`
 
 Impact messages. `{p}` and `{s}` are the tax as proposed and as supported, `{e}` the size of
 the error without its sign.
@@ -546,12 +575,12 @@ the error without its sign.
                   "role": "the statute that sets the amounts; each figure is cited to the page that prints it"},
     "figures": [when the filing status is in scope, one entry per parameter with a version in
       force on the decision date, in rulebook order:
-      {"parameter", "key", "value", <where>, "effective_from", "effective_to",
-       "role": "states the figure in force",
+      {"parameter", "key", "tax_year", "read_as_of" (the decision date), "value", <where>,
+       "effective_from", "effective_to", "role": "states the figure in force",
        "enacted_by": null, or {<where> of the version's enacted_by, "states"}}],
     "superseded_figures": [one entry per NUMBER_NOT_IN_FORCE finding with reason
       value_out_of_date, for the version the supplied value comes from:
-      {"parameter", "key", "value", <where>, "effective_from", "effective_to",
+      {"parameter", "key", "tax_year", "value", <where>, "effective_from", "effective_to",
        "role": "stated the figure before it was changed"}],
     "impact_engine": {"name", "version",
                       "role": "computed the tax amounts; not used to reach the verdict"}

@@ -202,7 +202,8 @@ def _check_numbers(action: dict, rulebook: dict, key: str) -> list:
         if name not in params:
             out.append({"kind": "UNKNOWN_PARAMETER", "subject": name, "entry": -1, "document": ""})
     for name, param in params.items():
-        common = {"subject": name, "entry": -1, "document": "", "key": key, "decision_date": date}
+        common = {"subject": name, "entry": -1, "document": "", "key": key,
+                  "tax_year": action["tax_year"], "decision_date": date}
         num = supplied.get(name)
         if num is None:
             out.append({"kind": "NUMBER_MISSING", **common})
@@ -352,31 +353,32 @@ def _message(f: dict, rulebook: dict) -> str:
                 f"on {f['decision_date']}, corrected by {new['id']} ({new['date']}). In force: "
                 f"{f['in_force_value']} ({new['id']}). Delta {_signed(f['delta'])}. To clear, "
                 f"supply {f['in_force_value']} from {new['id']}.")
-    subject = f"{f['subject']}[{f['key']}]" if "key" in f else f["subject"]
-    if k == "NUMBER_MISSING":
-        return (f"{subject}: not supplied. The return needs the value in force on "
-                f"{f['decision_date']}.")
-    if k == "NUMBER_NO_VERSION_IN_FORCE":
-        return f"{subject}: no version in the rulebook is in force on {f['decision_date']}."
     if k == "UNKNOWN_PARAMETER":
-        return f"{subject}: not a parameter in this rulebook."
+        return f"{f['subject']}: not a parameter in this rulebook."
+    # Two dates, kept apart: the tax year the figure applies to, and the day the law is read.
+    year, d = f"tax year {f['tax_year']}", f["decision_date"]
+    subject = f"{f['subject']}[{f['key']}] for {year}"
+    if k == "NUMBER_MISSING":
+        return f"{subject}: not supplied. The return needs the figure as the law reads on {d}."
+    if k == "NUMBER_NO_VERSION_IN_FORCE":
+        return f"{subject}: the rulebook has no figure as the law read on {d}."
     if k == "NUMBER_NOT_IN_FORCE":
-        d = f["decision_date"]
         now = f"{f['in_force_value']} ({_cite(f['in_force'])})"
         if f["enacted_by"] is not None:
             now += f", enacted by {_cite(f['enacted_by'])}"
         if f["reason"] == "value_out_of_date":
-            return (f"{subject}: {f['supplied_value']} is present but not in force on {d}; it was "
-                    f"in force {f['supplied_effective_from']} to {f['supplied_effective_to']} "
-                    f"({_cite(f['superseded'])}). In force on {d}: {now}. Delta "
-                    f"{_signed(f['delta'])}. To clear, supply {f['in_force_value']} from a source "
-                    f"in force on {d}.")
+            return (f"{subject}: {f['supplied_value']} is present but not in force as the law "
+                    f"reads on {d}. It was the published figure for {year} from "
+                    f"{f['supplied_effective_from']} to {f['supplied_effective_to']} "
+                    f"({_cite(f['superseded'])}). As read on {d}, the figure for {year} is {now}. "
+                    f"Delta {_signed(f['delta'])}. To clear, supply {f['in_force_value']} from "
+                    f"the source in force on {d}.")
         if f["reason"] == "source_not_in_force":
-            return (f"{subject}: {f['supplied_value']} is the value in force on {d}, but the "
-                    f"cited source {f['supplied_source_id']} is not the one in force. To clear, "
-                    f"cite {f['in_force']['source_id']}.")
-        return (f"{subject}: {f['supplied_value']} is not a value of this parameter in any "
-                f"version. In force on {d}: {now}. Delta {_signed(f['delta'])}.")
+            return (f"{subject}: {f['supplied_value']} is the figure as the law reads on {d}, but "
+                    f"the cited source {f['supplied_source_id']} is not the one in force. To "
+                    f"clear, cite {f['in_force']['source_id']}.")
+        return (f"{subject}: {f['supplied_value']} was never the published figure for {year}. As "
+                f"read on {d}, the figure for {year} is {now}. Delta {_signed(f['delta'])}.")
     raise ValueError(f"unknown finding kind {k}")
 
 
@@ -442,7 +444,8 @@ def _citations(action: dict, case: dict, rulebook: dict, impacts: dict, decision
                 continue
             enacted = v["enacted_by"]
             figures.append({
-                "parameter": name, "key": status, "value": v["values"][status],
+                "parameter": name, "key": status, "tax_year": action["tax_year"],
+                "read_as_of": date, "value": v["values"][status],
                 **_source(rulebook, v), "effective_from": v["effective_from"],
                 "effective_to": v["effective_to"], "role": "states the figure in force",
                 "enacted_by": None if enacted is None else
@@ -453,7 +456,8 @@ def _citations(action: dict, case: dict, rulebook: dict, impacts: dict, decision
                     o = next(x for x in param["versions"]
                              if x["effective_from"] == f["supplied_effective_from"])
                     superseded.append({
-                        "parameter": name, "key": status, "value": o["values"][status],
+                        "parameter": name, "key": status, "tax_year": action["tax_year"],
+                        "value": o["values"][status],
                         **_source(rulebook, o), "effective_from": o["effective_from"],
                         "effective_to": o["effective_to"],
                         "role": "stated the figure before it was changed"})

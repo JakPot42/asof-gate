@@ -20,10 +20,12 @@
         "key": "joint",
         "parameter": "standard_deduction",
         "pdf_page": 9,
+        "read_as_of": "2026-03-10",
         "role": "states the figure in force",
         "section": "section 3.01",
         "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
         "source_id": "irs-rev-proc-2025-32",
+        "tax_year": 2025,
         "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
         "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
         "value": 31500
@@ -40,9 +42,9 @@
     "decision_date": "2026-03-10",
     "findings": [],
     "impact": {
-      "message": "No stop, so no error to measure. On these fields the federal income tax is $84846.",
+      "message": "No stop, so no error to measure. On these fields the federal income tax is $15898.",
       "proposed": {
-        "income_tax": 84846,
+        "income_tax": 15898,
         "inputs": {
           "figures": {
             "standard_deduction": 31500
@@ -61,16 +63,16 @@
           "tax_year": 2025,
           "wages": [
             {
-              "amount": 204000,
+              "amount": 68000,
               "person": "spouse"
             },
             {
-              "amount": 236000,
+              "amount": 82000,
               "person": "taxpayer"
             }
           ]
         },
-        "inputs_sha256": "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f"
+        "inputs_sha256": "bedcf924b2b2f9f76c434925a689889a0a72ee91e34acb61feb5d7ff4ec74440"
       },
       "status": "clear",
       "supported": null
@@ -87,13 +89,13 @@
           "document": "W2C-1",
           "name": "wages",
           "person": "taxpayer",
-          "value": 236000
+          "value": 82000
         },
         {
           "document": "W2-2",
           "name": "wages",
           "person": "spouse",
-          "value": 204000
+          "value": 68000
         }
       ],
       "numbers": [
@@ -106,12 +108,12 @@
       "program": "FORM_1040",
       "tax_year": 2025
     },
-    "case_file_sha256": "b40faf3a66a093f66abaf78d979ee78cebc41254ee205e84a4bbd1d865ab8e41",
-    "impact_table_sha256": "65906c051336235b636176bbfa76c296d713a6c51ed62ad54c8f1d70945a7039",
-    "rulebook_sha256": "5667250381eb90b291dc147962db35e004cc4136d3f8920aba9ac1e62d5ffc5d"
+    "case_file_sha256": "ee4309830f5816d08789382d98e555c7df372d607446bf2ec965187ef873ad7e",
+    "impact_table_sha256": "cc237861029492ffcd2985775df5ed1d2f4d53732c3d791fb7f3f72822fd2ea1",
+    "rulebook_sha256": "2c1ade7db3072661e6783713cd18fbd5c69b2d3e3baf19b509cea9535c4b47c0"
   },
   "receipt_schema": "asof-gate/tax-receipt/1",
-  "receipt_sha256": "09df96011941509a6120da37a6c1d5647520fef1f3d64752c72355febc7dd991",
+  "receipt_sha256": "b9191dba0bd11329cbb4448c11c2553f116415d021dd72f05ef4df74c9a17f67",
   "rulebook": "form-1040-tax-year-2025",
   "rulebook_version": "1"
 }

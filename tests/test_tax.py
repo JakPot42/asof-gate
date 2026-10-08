@@ -89,10 +89,10 @@ def test_clear_passes_on_the_corrected_wages_and_the_deduction_in_force():
     fx, r = receipt_for("clear")
     assert r["decision"]["findings"] == []
     fields = {e["person"]: (e["value"], e["document"]) for e in fx["action"]["fields"]}
-    assert fields == {"taxpayer": (236000, "W2C-1"), "spouse": (204000, "W2-2")}
+    assert fields == {"taxpayer": (82000, "W2C-1"), "spouse": (68000, "W2-2")}
     assert fx["action"]["numbers"] == [{"parameter": "standard_deduction", "value": 31500,
                                         "source_id": NEW}]
-    assert r["decision"]["impact"]["message"].endswith("the federal income tax is $84846.")
+    assert r["decision"]["impact"]["message"].endswith("the federal income tax is $15898.")
 
 
 def test_wrong_person_says_present_in_a_source_but_not_the_named_persons_document():
@@ -101,12 +101,12 @@ def test_wrong_person_says_present_in_a_source_but_not_the_named_persons_documen
     assert (f["person"], f["document"], f["document_person"]) == ("taxpayer", "W2-2", "spouse")
     assert "present in a source, but not in taxpayer's document: W2-2 names spouse." in f["message"]
     assert f["person_in_force"] == [{"document": "W2-1", "in_force_document": "W2C-1",
-                                     "in_force_date": "2026-02-17", "value": 236000}]
-    assert "In force for taxpayer: 236000 (W2C-1, correcting W2-1)." in f["message"]
+                                     "in_force_date": "2026-02-17", "value": 82000}]
+    assert "In force for taxpayer: 82000 (W2C-1, correcting W2-1)." in f["message"]
     # The taxpayer's own form went unread, and the gate says that too.
     missing = finding(r, "FACT_MISSING")
     assert (missing["person"], missing["document"], missing["in_force_value"]) == \
-        ("taxpayer", "W2-1", 236000)
+        ("taxpayer", "W2-1", 82000)
     assert len(r["decision"]["findings"]) == 2
 
 
@@ -116,11 +116,11 @@ def test_superseded_document_names_the_field_the_document_and_what_is_in_force()
     f = r["decision"]["findings"][0]
     assert f["superseded_document"] == {"id": "W2-1", "date": "2026-01-22"}
     assert f["in_force_document"] == {"id": "W2C-1", "date": "2026-02-17"}
-    assert (f["supplied_value"], f["in_force_value"], f["delta"]) == (228000, 236000, 8000)
+    assert (f["supplied_value"], f["in_force_value"], f["delta"]) == (76000, 82000, 6000)
     assert f["message"] == (
-        "wages for taxpayer = 228000: Box 1 of W2-1 (2026-01-22) is present but superseded on "
-        "2026-03-10, corrected by W2C-1 (2026-02-17). In force: 236000 (W2C-1). Delta +8000. "
-        "To clear, supply 236000 from W2C-1.")
+        "wages for taxpayer = 76000: Box 1 of W2-1 (2026-01-22) is present but superseded on "
+        "2026-03-10, corrected by W2C-1 (2026-02-17). In force: 82000 (W2C-1). Delta +6000. "
+        "To clear, supply 82000 from W2C-1.")
 
 
 def test_superseded_figure_says_present_but_not_in_force_and_cites_both_sources():
@@ -132,7 +132,14 @@ def test_superseded_figure_says_present_but_not_in_force_and_cites_both_sources(
     assert f["superseded"] == {"source_id": OLD, "section": "section 2.15(1)", "pdf_page": 12}
     assert f["in_force"] == {"source_id": NEW, "section": "section 3.01", "pdf_page": 9}
     assert f["enacted_by"]["source_id"] == LAW and f["enacted_by"]["pdf_page"] == 88
-    assert "30000 is present but not in force on 2026-03-10" in f["message"]
+    assert f["tax_year"] == 2025 and f["decision_date"] == "2026-03-10"
+    assert f["message"] == (
+        "standard_deduction[joint] for tax year 2025: 30000 is present but not in force as the "
+        "law reads on 2026-03-10. It was the published figure for tax year 2025 from 2024-10-22 "
+        "to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). As read on "
+        "2026-03-10, the figure for tax year 2025 is 31500 (irs-rev-proc-2025-32, section 3.01, "
+        "PDF page 9), enacted by public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, "
+        "PDF page 88. Delta +1500. To clear, supply 31500 from the source in force on 2026-03-10.")
     for source in (OLD, NEW, LAW):
         assert source in f["message"]
     cit = r["citations"]
@@ -144,8 +151,8 @@ def test_superseded_figure_says_present_but_not_in_force_and_cites_both_sources(
         assert c["sha256"] == sources[c["source_id"]]["sha256"]
 
 
-TAX = {"clear": 84846, "wrong_person": 76054, "superseded_document": 82286,
-       "superseded_figure": 85326}
+TAX = {"clear": 15898, "wrong_person": 12818, "superseded_document": 14578,
+       "superseded_figure": 16228}
 
 
 @pytest.mark.parametrize("name", NAMES)
@@ -157,7 +164,7 @@ def test_every_stop_is_material_and_prints_its_tax_impact(name):
         return
     assert impact["supported"]["income_tax"] == TAX["clear"]
     assert impact["error"] == TAX[name] - TAX["clear"]
-    assert abs(impact["error"]) >= 400, "each stop must move the tax by several hundred dollars"
+    assert abs(impact["error"]) >= 300, "each stop must move the tax by several hundred dollars"
     way = "overstated" if impact["error"] > 0 else "understated"
     assert impact["message"] == (
         f"Federal income tax would be {way} by ${abs(impact['error'])}: ${TAX[name]} as "
@@ -165,12 +172,11 @@ def test_every_stop_is_material_and_prints_its_tax_impact(name):
 
 
 def joint_tax_2025(taxable: int) -> int:
-    """Rev. Proc. 2024-40, section 2.01, Table 1 (PDF page 5), the two rows these returns use."""
-    if 206700 < taxable <= 394600:
-        return round(35302 + 0.24 * (taxable - 206700))
-    if 394600 < taxable <= 501050:
-        return round(80398 + 0.32 * (taxable - 394600))
-    raise AssertionError("outside the two rows transcribed here")
+    """Rev. Proc. 2024-40, section 2.01, Table 1 (PDF page 5), the row these returns use:
+    over $96,950 but not over $206,700, $11,157 plus 22% of the excess over $96,950."""
+    if 96950 < taxable <= 206700:
+        return round(11157 + 0.22 * (taxable - 96950))
+    raise AssertionError("outside the row transcribed here")
 
 
 def test_the_impact_table_matches_the_rate_table_by_hand():
@@ -217,7 +223,7 @@ def test_source_pdfs_match_the_rulebook():
 PRINTED = [
     (OLD, 12, ["$30,000", "$22,500", "$15,000"]),
     (OLD, 4, ["as in effect on October 22, 2024"]),
-    (OLD, 5, ["$35,302 plus 24%", "$80,398 plus 32%"]),
+    (OLD, 5, ["Over $96,950 but", "$11,157 plus 22%"]),
     (NEW, 9, ["$31,500", "$23,625", "$15,750", "section 2.15(1) of Rev. Proc. 2024-40 is removed"]),
     (NEW, 6, ["$31,500 for married individuals filing a joint return"]),
     (LAW, 88, ["SEC. 70102", "$23,625"]),
@@ -268,16 +274,16 @@ FORGERIES = {
     "understated relabelled as no impact": ("superseded_document", lambda r: r["decision"]["impact"]
                                              .__setitem__("class", "no_tax_impact")),
     "the value in force changed": ("superseded_document", lambda r: r["decision"]["findings"][0]
-                                   .update(in_force_value=228000, delta=0)),
+                                   .update(in_force_value=76000, delta=0)),
     "a finding removed": ("wrong_person", _drop_missing),
     "the superseded figure cited as in force": ("superseded_figure", lambda r: r["citations"]["figures"][0]
                                                 .update(value=30000)),
     "the cited page changed": ("superseded_figure", lambda r: r["citations"]["figures"][0]
                                .update(pdf_page=1)),
     "the message softened": ("wrong_person", lambda r: r["decision"]["findings"][1]
-                             .update(message="wages for taxpayer = 204000: fine.")),
+                             .update(message="wages for taxpayer = 68000: fine.")),
     "a clear receipt for other wages": ("clear", lambda r: r["inputs"]["action"]["fields"][0]
-                                        .update(value=228000, document="W2-1")),
+                                        .update(value=76000, document="W2-1")),
     "the engine renamed": ("clear", lambda r: r["citations"]["impact_engine"].update(version="0")),
 }
 
@@ -303,7 +309,7 @@ def test_verifier_rejects_edit_without_rehash(tmp_path):
 def test_verifier_rejects_a_different_case_file(tmp_path):
     _, r = receipt_for("superseded_document")
     case = load(CASE)
-    case["documents"][2]["correct_information"]["box1_wages"] = 228000
+    case["documents"][2]["correct_information"]["box1_wages"] = 76000
     out = run_verifier(write(tmp_path, r), case=write(tmp_path, case, "case.json"))
     assert out.returncode == 1 and "case file does not hash" in out.stdout
 
@@ -320,7 +326,7 @@ def test_verifier_rejects_a_different_impact_table(tmp_path):
     _, r = receipt_for("wrong_person")
     table = load(IMPACTS)
     for row in table["results"].values():
-        row["income_tax"] = 84846
+        row["income_tax"] = 15898
     out = run_verifier(write(tmp_path, r), impacts=write(tmp_path, table, "t.json"))
     assert out.returncode == 1 and "impact table does not hash" in out.stdout
 
@@ -389,7 +395,7 @@ def _cases():
     second["documents"].append({
         "id": "W2C-2", "type": "w2c", "person": "taxpayer", "payer": base["documents"][0]["payer"],
         "date": "2026-03-02", "tax_year": 2025, "corrects": "W2-1",
-        "previously_reported": {"box1_wages": 236000}, "correct_information": {"box1_wages": 240000}})
+        "previously_reported": {"box1_wages": 82000}, "correct_information": {"box1_wages": 85000}})
     out["a second correction"] = second
 
     other_box = copy.deepcopy(base)
@@ -410,18 +416,18 @@ def _cases():
 
 TAXPAYER = [None] + [{"name": "wages", "person": "taxpayer", "value": v, "document": d}
                      for d in ("W2-1", "W2C-1", "W2-2", "", "NOPE", "INT-1")
-                     for v in (228000, 236000, 204000)]
+                     for v in (76000, 82000, 68000)]
 SPOUSE = [
     [],
-    [{"name": "wages", "person": "spouse", "value": 204000, "document": "W2-2"}],
-    [{"name": "wages", "person": "spouse", "value": 204001, "document": "W2-2"}],
-    [{"name": "wages", "person": "spouse", "value": 228000, "document": "W2-1"}],
-    [{"name": "wages", "person": "spouse", "value": 204000, "document": "W2-2"},
-     {"name": "wages", "person": "spouse", "value": 204000, "document": "W2-2"}],
-    [{"name": "wages", "person": "spouse", "value": 204000, "document": "W2-2"},
+    [{"name": "wages", "person": "spouse", "value": 68000, "document": "W2-2"}],
+    [{"name": "wages", "person": "spouse", "value": 68001, "document": "W2-2"}],
+    [{"name": "wages", "person": "spouse", "value": 76000, "document": "W2-1"}],
+    [{"name": "wages", "person": "spouse", "value": 68000, "document": "W2-2"},
+     {"name": "wages", "person": "spouse", "value": 68000, "document": "W2-2"}],
+    [{"name": "wages", "person": "spouse", "value": 68000, "document": "W2-2"},
      {"name": "wages", "person": "spouse", "value": 19000, "document": "W2-3"},
      {"name": "tips", "person": "spouse", "value": 5, "document": "W2-2"}],
-    [{"name": "wages", "person": "dependent", "value": 204000, "document": "W2-2"}],
+    [{"name": "wages", "person": "dependent", "value": 68000, "document": "W2-2"}],
 ]
 NUMBERS = [
     [],
@@ -543,6 +549,39 @@ def test_30000_was_in_force_on_3_july_2025_and_not_on_4_july():
             [("NUMBER_NOT_IN_FORCE", "value_out_of_date")]
 
 
+def test_the_same_tax_year_read_on_two_dates_gives_two_figures():
+    """Two dates, kept apart. The figure applies to tax year 2025 in both readings. What
+    differs is the day the law is read: before Public Law 119-21 was enacted, and after."""
+    case, rb = load(CASE), load(RULEBOOK)
+    assert rb["parameters"]["standard_deduction"]["applies_to_tax_year"] == 2025
+
+    def read_on(date, value, source):
+        action = {"action": "prepare_return", "program": "FORM_1040", "tax_year": 2025,
+                  "decision_date": date, "fields": [],
+                  "numbers": [{"parameter": "standard_deduction", "value": value,
+                               "source_id": source}]}
+        r = tax.build_receipt(action, json.dumps(case).encode("utf-8"), RULEBOOK.read_bytes(),
+                              IMPACTS.read_bytes())
+        figure = r["citations"]["figures"][0]
+        assert (figure["tax_year"], figure["read_as_of"]) == (2025, date)
+        stops = [f for f in r["decision"]["findings"] if f["subject"] == "standard_deduction"]
+        return figure["value"], figure["source_id"], stops
+
+    assert read_on("2025-06-01", 30000, OLD) == (30000, OLD, [])
+    assert read_on("2026-03-10", 31500, NEW) == (31500, NEW, [])
+
+    # The same $30,000, for the same tax year, is in force on one reading and not on the other.
+    value, _, stops = read_on("2026-03-10", 30000, OLD)
+    assert value == 31500 and stops[0]["tax_year"] == 2025
+    assert "It was the published figure for tax year 2025 from 2024-10-22 to 2025-07-03" \
+        in stops[0]["message"]
+    assert "As read on 2026-03-10, the figure for tax year 2025 is 31500" in stops[0]["message"]
+    # And $31,500 did not exist yet for a return prepared on 1 June 2025.
+    value, _, stops = read_on("2025-06-01", 31500, NEW)
+    assert value == 30000
+    assert "As read on 2025-06-01, the figure for tax year 2025 is 30000" in stops[0]["message"]
+
+
 def test_the_right_value_from_the_superseded_document_is_still_stopped():
     fx = load(ROOT / "fixtures" / "tax" / "clear.json")
     fx["action"]["fields"][0]["document"] = "W2-1"
@@ -554,7 +593,7 @@ def test_the_right_value_from_the_superseded_document_is_still_stopped():
 # --- invalid inputs --------------------------------------------------------------------
 
 def _float_wage(a, c):
-    a["fields"][0]["value"] = 236000.0
+    a["fields"][0]["value"] = 82000.0
 
 
 def _bool_field(a, c):

@@ -16,13 +16,13 @@
    {
     "name": "wages",
     "person": "taxpayer",
-    "value": 228000,
+    "value": 76000,
     "document": "W2-1"
    },
    {
     "name": "wages",
     "person": "spouse",
-    "value": 204000,
+    "value": 68000,
     "document": "W2-2"
    }
   ],

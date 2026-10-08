@@ -713,7 +713,7 @@ def tax_examine_numbers(action, rb, status) -> list:
     for name in rb["parameters"]:
         versions = rb["parameters"][name]["versions"]
         finding = {"subject": name, "entry": -1, "document": "", "key": status,
-                   "decision_date": date}
+                   "decision_date": date, "tax_year": action["tax_year"]}
         if name not in given:
             finding["kind"] = "NUMBER_MISSING"
             found.append(finding)
@@ -770,7 +770,11 @@ TAX_NOT_IN_SOURCE = {
 def tax_describe(f, rb) -> str:
     rule = rb["field_rules"]["wages"]
     kind = f["kind"]
-    name = f["subject"] + ("[" + f["key"] + "]" if "key" in f else "")
+    # A figure has two dates: the tax year it applies to, and the day the law is read.
+    period = "tax year {}".format(f["tax_year"]) if "tax_year" in f else ""
+    name = f["subject"]
+    if "key" in f:
+        name = "{}[{}] for {}".format(f["subject"], f["key"], period)
     if kind == "OUT_OF_SCOPE":
         return ("filing_status = " + f["supplied_value"]
                 + ": outside the filing statuses this rulebook covers.")
@@ -781,29 +785,31 @@ def tax_describe(f, rb) -> str:
     if kind == "UNKNOWN_PARAMETER":
         return name + ": not a parameter in this rulebook."
     if kind == "NUMBER_MISSING":
-        return (name + ": not supplied. The return needs the value in force on "
+        return (name + ": not supplied. The return needs the figure as the law reads on "
                 + f["decision_date"] + ".")
     if kind == "NUMBER_NO_VERSION_IN_FORCE":
-        return name + ": no version in the rulebook is in force on " + f["decision_date"] + "."
+        return name + ": the rulebook has no figure as the law read on " + f["decision_date"] + "."
     if kind == "NUMBER_NOT_IN_FORCE":
         day = f["decision_date"]
         standing_now = "{} ({})".format(f["in_force_value"], cited_at(f["in_force"]))
         if f["enacted_by"]:
             standing_now += ", enacted by " + cited_at(f["enacted_by"])
         if f["reason"] == "source_not_in_force":
-            return ("{}: {} is the value in force on {}, but the cited source {} is not the one "
-                    "in force. To clear, cite {}.").format(
+            return ("{}: {} is the figure as the law reads on {}, but the cited source {} is not "
+                    "the one in force. To clear, cite {}.").format(
                         name, f["supplied_value"], day, f["supplied_source_id"],
                         f["in_force"]["source_id"])
         if f["reason"] == "value_unknown":
-            return ("{}: {} is not a value of this parameter in any version. In force on {}: "
-                    "{}. Delta {}.").format(name, f["supplied_value"], day, standing_now,
-                                           signed(f["delta"]))
-        return ("{}: {} is present but not in force on {}; it was in force {} to {} ({}). "
-                "In force on {}: {}. Delta {}. To clear, supply {} from a source in force on "
-                "{}.").format(name, f["supplied_value"], day, f["supplied_effective_from"],
-                              f["supplied_effective_to"], cited_at(f["superseded"]), day,
-                              standing_now, signed(f["delta"]), f["in_force_value"], day)
+            return ("{}: {} was never the published figure for {}. As read on {}, the figure "
+                    "for {} is {}. Delta {}.").format(
+                        name, f["supplied_value"], period, day, period, standing_now,
+                        signed(f["delta"]))
+        return ("{}: {} is present but not in force as the law reads on {}. It was the "
+                "published figure for {} from {} to {} ({}). As read on {}, the figure for {} "
+                "is {}. Delta {}. To clear, supply {} from the source in force on {}.").format(
+                    name, f["supplied_value"], day, period, f["supplied_effective_from"],
+                    f["supplied_effective_to"], cited_at(f["superseded"]), day, period,
+                    standing_now, signed(f["delta"]), f["in_force_value"], day)
 
     subject = "{} for {} = {}".format(f["subject"], f["person"], f["supplied_value"])
     if kind == "FACT_NOT_IN_SOURCE":
@@ -941,7 +947,8 @@ def tax_rebuild(action: dict, case_bytes: bytes, rb_bytes: bytes, table_bytes: b
             version = version_on(param["versions"], date)
             if version is None:
                 continue
-            row = {"parameter": name, "key": status, "value": version["values"][status]}
+            row = {"parameter": name, "key": status, "value": version["values"][status],
+                   "tax_year": action["tax_year"], "read_as_of": date}
             row.update(tax_source(rb, version))
             row.update(effective_from=version["effective_from"],
                        effective_to=version["effective_to"], role="states the figure in force",
@@ -957,7 +964,8 @@ def tax_rebuild(action: dict, case_bytes: bytes, rb_bytes: bytes, table_bytes: b
                     continue
                 old = [x for x in param["versions"]
                        if x["effective_from"] == f["supplied_effective_from"]][0]
-                gone = {"parameter": name, "key": status, "value": old["values"][status]}
+                gone = {"parameter": name, "key": status, "value": old["values"][status],
+                        "tax_year": action["tax_year"]}
                 gone.update(tax_source(rb, old))
                 gone.update(effective_from=old["effective_from"], effective_to=old["effective_to"],
                             role="stated the figure before it was changed")

@@ -253,30 +253,39 @@ return. The return, the people and the employers are synthetic.
 
 | fixture | what the extraction step did | verdict | federal income tax as proposed | on the documents and figures in force | effect |
 |---|---|---|---:|---:|---|
-| `CLEAR` | read the taxpayer's wages from the W-2c, the spouse's from the spouse's W-2, and used the standard deduction in force | CLEAR | $84,846 | | none |
-| `WRONG_PERSON` | took the taxpayer's wages from the spouse's W-2 | **STOP** | $76,054 | $84,846 | understated by $8,792 |
-| `SUPERSEDED_DOCUMENT` | used Box 1 of the original W-2 although a W-2c corrects it | **STOP** | $82,286 | $84,846 | understated by $2,560 |
-| `SUPERSEDED_FIGURE` | used the 2025 standard deduction as announced before Public Law 119-21 changed it | **STOP** | $85,326 | $84,846 | overstated by $480 |
+| `CLEAR` | read the taxpayer's wages from the W-2c, the spouse's from the spouse's W-2, and used the standard deduction in force | CLEAR | $15,898 | | none |
+| `WRONG_PERSON` | took the taxpayer's wages from the spouse's W-2 | **STOP** | $12,818 | $15,898 | understated by $3,080 |
+| `SUPERSEDED_DOCUMENT` | used Box 1 of the original W-2 although a W-2c corrects it | **STOP** | $14,578 | $15,898 | understated by $1,320 |
+| `SUPERSEDED_FIGURE` | used the 2025 standard deduction as published before Public Law 119-21 changed it | **STOP** | $16,228 | $15,898 | overstated by $330 |
 
-All four are a joint return prepared on 10 March 2026. The wages are $236,000 (taxpayer, as
-corrected; $228,000 on the original form) and $204,000 (spouse).
+All four are a joint return prepared on 10 March 2026, with $150,000 of wages: $82,000 for
+the taxpayer as corrected ($76,000 on the original form) and $68,000 for the spouse. The
+couple is in the 22 percent bracket.
+
+**The impacts cover federal income tax only.** They exclude withholding, State tax and every
+other tax. They say how far the tax on the return would be off, not what the couple would owe
+or be refunded.
 
 `SUPERSEDED_DOCUMENT` stops with:
 
-> wages for taxpayer = 228000: Box 1 of W2-1 (2026-01-22) is present but superseded on
-> 2026-03-10, corrected by W2C-1 (2026-02-17). In force: 236000 (W2C-1). Delta +8000. To clear,
-> supply 236000 from W2C-1.
+> wages for taxpayer = 76000: Box 1 of W2-1 (2026-01-22) is present but superseded on
+> 2026-03-10, corrected by W2C-1 (2026-02-17). In force: 82000 (W2C-1). Delta +6000. To clear,
+> supply 82000 from W2C-1.
 >
-> Federal income tax would be understated by $2560: $82286 as proposed, $84846 on the documents
+> Federal income tax would be understated by $1320: $14578 as proposed, $15898 on the documents
 > and figures in force.
 
 `SUPERSEDED_FIGURE` stops with:
 
-> standard_deduction[joint]: 30000 is present but not in force on 2026-03-10; it was in force
-> 2024-10-22 to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). In force on
-> 2026-03-10: 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted by
-> public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500. To
-> clear, supply 31500 from a source in force on 2026-03-10.
+> standard_deduction[joint] for tax year 2025: 30000 is present but not in force as the law
+> reads on 2026-03-10. It was the published figure for tax year 2025 from 2024-10-22 to
+> 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). As read on 2026-03-10, the
+> figure for tax year 2025 is 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted
+> by public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500.
+> To clear, supply 31500 from the source in force on 2026-03-10.
+>
+> Federal income tax would be overstated by $330: $16228 as proposed, $15898 on the documents
+> and figures in force.
 
 `WRONG_PERSON` stops with two findings: the wages are "present in a source, but not in
 taxpayer's document: W2-2 names spouse", and the taxpayer's own W-2 was read by no entry.
@@ -285,12 +294,23 @@ The rule that a figure must be the one in force now covers documents too. A W-2c
 Box 1 puts Box 1 of the original W-2 out of force, and the stop names the field, the document
 cited, and the document and value in force instead. `docs/SPEC.md`, "Tax path", is the rule.
 
+### Two dates
+
+A tax figure has two dates, and the gate keeps them apart: the period the figure applies to
+(tax year 2025), and the date as of which the law is read (the day the return is prepared).
+
+Public Law 119-21 changed the 2025 figure retroactively. It was enacted on 4 July 2025 and
+applies to taxable years beginning after 31 December 2024. So $30,000 was the published
+figure for 2025 until then, and $31,500 is the figure for 2025 as read on any date after
+enactment. A test reads the same tax year on two dates: on 1 June 2025 the gate gives $30,000
+and passes a return that uses it; on 10 March 2026 it gives $31,500 and stops the same return.
+
 ### The figures and their sources
 
 | figure | value | printed in |
 |---|---:|---|
-| standard deduction, joint return, as first announced for 2025 | $30,000 | Rev. Proc. 2024-40, section 2.15(1), PDF page 12. Its section 1 (PDF page 4) says the figures are "as in effect on October 22, 2024" |
-| standard deduction, joint return, in force | $31,500 | Rev. Proc. 2025-32, section 3.01, PDF page 9, which removes section 2.15(1) of Rev. Proc. 2024-40; also section 2.08, PDF page 6 |
+| standard deduction for 2025, joint return, as first published | $30,000 | Rev. Proc. 2024-40, section 2.15(1), PDF page 12. Its section 1 (PDF page 4) says the figures are "as in effect on October 22, 2024" |
+| standard deduction for 2025, joint return, in force | $31,500 | Rev. Proc. 2025-32, section 3.01, PDF page 9, which removes section 2.15(1) of Rev. Proc. 2024-40; also section 2.08, PDF page 6 |
 | the change | $23,625 and $15,750 | Public Law 119-21, section 70102(b), 139 Stat. 158-159: $23,625 on PDF page 88, $15,750 on PDF page 89. Section 70102(c), PDF page 89, applies them to taxable years beginning after December 31, 2024 |
 
 **The public law does not print $31,500.** It prints the amounts for a head of household and
@@ -307,12 +327,12 @@ force; $15,000 and $22,500 before). The fixtures use the joint figure only.
 
 `tools/policyengine_tax_tool.py confirm` compares PolicyEngine's 2025 standard deduction with
 the rulebook's figure in force for the four filing statuses. **policyengine-us 2.24.5 matches
-all four.** It holds no trace of the $30,000 that was announced first, so the tool prices the
+all four.** It holds no trace of the $30,000 that was published first, so the tool prices the
 superseded figure by setting the deduction to the number in the return being priced.
 
 The four amounts in the table are PolicyEngine's `income_tax`. A test recomputes each by hand
-from the 2025 rate table in Rev. Proc. 2024-40 (section 2.01, Table 1, PDF page 5) and
-requires the same dollar.
+from the 2025 rate table in Rev. Proc. 2024-40 (section 2.01, Table 1, PDF page 5: $11,157
+plus 22 percent of taxable income over $96,950) and requires the same dollar.
 
 ### Run it
 
@@ -340,14 +360,14 @@ its hash recomputed, are all rejected.
 
 - **Wages and the standard deduction only.** No other income, no dependents, no credits, no
   itemized deductions, nobody 65 or over. One figure is checked.
-- **Federal income tax only.** The effect shown leaves out withholding, State tax, and the
-  Additional Medicare Tax on wages above $250,000, which these wages reach and which would
-  move with them.
+- **Federal income tax only**, as said above: no withholding, no State tax, no other tax.
+- **Computed from the rate schedule.** Every taxable income here is above $100,000, where the
+  form uses the schedule and not the Tax Table.
 - **Completeness is checked only against the case file.** A W-2 that is in the file and read
   by no entry is a stop. A W-2 that never reached the file is invisible.
-- **The dates are a modelling choice.** The $30,000 is treated as in force from the date
-  Rev. Proc. 2024-40 says its figures are as of until the day before the public law was
-  enacted. The decision date is the day the return is prepared.
+- **The reading dates are a modelling choice.** The $30,000 is treated as the figure in force
+  from the date Rev. Proc. 2024-40 says its figures are as of until the day before the public
+  law was enacted.
 - **Not tax advice, and not a tax preparer.** Nothing is filed. Documents are structured
   records, not scanned forms.
 
