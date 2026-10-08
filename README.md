@@ -212,7 +212,7 @@ python -m pytest -q
 
 The gate exits 0 when the action is clear and 2 when it stops. The verifier exits 0 only when
 the receipt it recomputes is byte-identical to the one it was given, and 1 otherwise. The
-test suite takes about thirteen minutes, most of it the planted-bug runs.
+test suite takes about eleven to fourteen minutes, most of it the planted-bug runs.
 
 To recheck the benefit amounts, with `policyengine-us==2.24.5` installed:
 
