@@ -1,0 +1,37 @@
+{
+ "fixture": "SUPERSEDED_FIGURE",
+ "description": "The extraction step used the 2025 standard deduction for a joint return as announced in Rev. Proc. 2024-40, before Public Law 119-21 changed it.",
+ "case_file": "fixtures/tax/cases/case_t1.json",
+ "rulebook": "rules/tax_ty2025_form1040.json",
+ "impacts": "impacts/policyengine_tax.json",
+ "expect_verdict": "STOP",
+ "expect_class": "tax_overstated",
+ "action": {
+  "action_id": "tax_superseded_figure",
+  "action": "prepare_return",
+  "program": "FORM_1040",
+  "tax_year": 2025,
+  "decision_date": "2026-03-10",
+  "fields": [
+   {
+    "name": "wages",
+    "person": "taxpayer",
+    "value": 236000,
+    "document": "W2C-1"
+   },
+   {
+    "name": "wages",
+    "person": "spouse",
+    "value": 204000,
+    "document": "W2-2"
+   }
+  ],
+  "numbers": [
+   {
+    "parameter": "standard_deduction",
+    "value": 30000,
+    "source_id": "irs-rev-proc-2024-40"
+   }
+  ]
+ }
+}

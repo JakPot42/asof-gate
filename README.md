@@ -212,7 +212,7 @@ python -m pytest -q
 
 The gate exits 0 when the action is clear and 2 when it stops. The verifier exits 0 only when
 the receipt it recomputes is byte-identical to the one it was given, and 1 otherwise. The
-test suite takes about ten minutes, most of it the planted-bug runs.
+test suite takes about thirteen minutes, most of it the planted-bug runs.
 
 To recheck the benefit amounts, with `policyengine-us==2.24.5` installed:
 
@@ -243,6 +243,113 @@ and rehash it. What stops that is recomputation: the tests flip a stop to a clea
 "counts" to "does not count", raise the tolerance to $200, shrink the error, relabel the
 wrongful denial as no impact, credit the statute with a figure, and rewrite the action, each
 time recomputing the hash. The verifier rejects all seventeen.
+
+## A second example: a tax return
+
+The same check, on a different kind of filing. An extraction step proposes fields for a tax
+year 2025 Form 1040 from three documents: the taxpayer's W-2, the spouse's W-2, and a W-2c
+that corrects Box 1 of the taxpayer's W-2. The gate checks each field before it enters the
+return. The return, the people and the employers are synthetic.
+
+| fixture | what the extraction step did | verdict | federal income tax as proposed | on the documents and figures in force | effect |
+|---|---|---|---:|---:|---|
+| `CLEAR` | read the taxpayer's wages from the W-2c, the spouse's from the spouse's W-2, and used the standard deduction in force | CLEAR | $84,846 | | none |
+| `WRONG_PERSON` | took the taxpayer's wages from the spouse's W-2 | **STOP** | $76,054 | $84,846 | understated by $8,792 |
+| `SUPERSEDED_DOCUMENT` | used Box 1 of the original W-2 although a W-2c corrects it | **STOP** | $82,286 | $84,846 | understated by $2,560 |
+| `SUPERSEDED_FIGURE` | used the 2025 standard deduction as announced before Public Law 119-21 changed it | **STOP** | $85,326 | $84,846 | overstated by $480 |
+
+All four are a joint return prepared on 10 March 2026. The wages are $236,000 (taxpayer, as
+corrected; $228,000 on the original form) and $204,000 (spouse).
+
+`SUPERSEDED_DOCUMENT` stops with:
+
+> wages for taxpayer = 228000: Box 1 of W2-1 (2026-01-22) is present but superseded on
+> 2026-03-10, corrected by W2C-1 (2026-02-17). In force: 236000 (W2C-1). Delta +8000. To clear,
+> supply 236000 from W2C-1.
+>
+> Federal income tax would be understated by $2560: $82286 as proposed, $84846 on the documents
+> and figures in force.
+
+`SUPERSEDED_FIGURE` stops with:
+
+> standard_deduction[joint]: 30000 is present but not in force on 2026-03-10; it was in force
+> 2024-10-22 to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). In force on
+> 2026-03-10: 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted by
+> public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500. To
+> clear, supply 31500 from a source in force on 2026-03-10.
+
+`WRONG_PERSON` stops with two findings: the wages are "present in a source, but not in
+taxpayer's document: W2-2 names spouse", and the taxpayer's own W-2 was read by no entry.
+
+The rule that a figure must be the one in force now covers documents too. A W-2c that states
+Box 1 puts Box 1 of the original W-2 out of force, and the stop names the field, the document
+cited, and the document and value in force instead. `docs/SPEC.md`, "Tax path", is the rule.
+
+### The figures and their sources
+
+| figure | value | printed in |
+|---|---:|---|
+| standard deduction, joint return, as first announced for 2025 | $30,000 | Rev. Proc. 2024-40, section 2.15(1), PDF page 12. Its section 1 (PDF page 4) says the figures are "as in effect on October 22, 2024" |
+| standard deduction, joint return, in force | $31,500 | Rev. Proc. 2025-32, section 3.01, PDF page 9, which removes section 2.15(1) of Rev. Proc. 2024-40; also section 2.08, PDF page 6 |
+| the change | $23,625 and $15,750 | Public Law 119-21, section 70102(b), 139 Stat. 158-159: $23,625 on PDF page 88, $15,750 on PDF page 89. Section 70102(c), PDF page 89, applies them to taxable years beginning after December 31, 2024 |
+
+**The public law does not print $31,500.** It prints the amounts for a head of household and
+for other filers; the joint amount is printed by the IRS in Rev. Proc. 2025-32, and that is
+the document the receipts cite for it. The public law is cited as the statute that made the
+change, with what it prints and what it does not. All three PDFs are in `sources/`, the
+rulebook records their hashes, and a test reads each cited page and fails if the figure is not
+on it. That test needs `pypdf` and is skipped without it.
+
+The rulebook holds the other filing statuses from the same pages ($15,750 and $23,625 in
+force; $15,000 and $22,500 before). The fixtures use the joint figure only.
+
+### The tax amounts
+
+`tools/policyengine_tax_tool.py confirm` compares PolicyEngine's 2025 standard deduction with
+the rulebook's figure in force for the four filing statuses. **policyengine-us 2.24.5 matches
+all four.** It holds no trace of the $30,000 that was announced first, so the tool prices the
+superseded figure by setting the deduction to the number in the return being priced.
+
+The four amounts in the table are PolicyEngine's `income_tax`. A test recomputes each by hand
+from the 2025 rate table in Rev. Proc. 2024-40 (section 2.01, Table 1, PDF page 5) and
+requires the same dollar.
+
+### Run it
+
+```
+python -m asof_gate fixtures/tax/superseded_document.json --out receipts/tax/superseded_document.json
+python verifier/verify_receipt.py receipts/tax/superseded_document.json \
+    --case fixtures/tax/cases/case_t1.json --rulebook rules/tax_ty2025_form1040.json \
+    --impacts impacts/policyengine_tax.json
+python -m pytest -q tests/test_tax.py
+```
+
+The verifier is the same file and the same command as for SNAP. Its tax recomputation shares
+no code with the gate's; a test compares the function bodies. The two are checked against each
+other on 23,940 generated returns: wages from each document in the file and from none, for the
+right person and the wrong one, read twice and not at all; a second correction, a correction
+that does not state Box 1, a second employer; the deduction right, superseded, wrongly sourced
+and unknown; decision dates on both sides of the correction and of the public law. Every kind
+of finding in the specification turns up at least once.
+
+`tests/test_tax_planted_bugs.py` plants seventeen bugs, one at a time, in the gate or the
+verifier and passes only when the tax suite goes red each time. Ten forged receipts, each with
+its hash recomputed, are all rejected.
+
+### What the tax example is not
+
+- **Wages and the standard deduction only.** No other income, no dependents, no credits, no
+  itemized deductions, nobody 65 or over. One figure is checked.
+- **Federal income tax only.** The effect shown leaves out withholding, State tax, and the
+  Additional Medicare Tax on wages above $250,000, which these wages reach and which would
+  move with them.
+- **Completeness is checked only against the case file.** A W-2 that is in the file and read
+  by no entry is a stop. A W-2 that never reached the file is invisible.
+- **The dates are a modelling choice.** The $30,000 is treated as in force from the date
+  Rev. Proc. 2024-40 says its figures are as of until the day before the public law was
+  enacted. The decision date is the day the return is prepared.
+- **Not tax advice, and not a tax preparer.** Nothing is filed. Documents are structured
+  records, not scanned forms.
 
 ## What this is not
 

@@ -1,0 +1,170 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "26 U.S.C. 63(c)(7), as amended by Public Law 119-21, section 70102",
+      "role": "the statute that sets the amounts; each figure is cited to the page that prints it"
+    },
+    "figures": [
+      {
+        "effective_from": "2025-07-04",
+        "effective_to": "9999-12-31",
+        "enacted_by": {
+          "pdf_page": 88,
+          "section": "section 70102(b) and (c), 139 Stat. 158-159",
+          "sha256": "42f86c3d408bccb1a663c11a51a90d207b3dbc25e689240da51726154be51c8b",
+          "source_id": "public-law-119-21",
+          "states": "Prints $23,625 (PDF page 88) and $15,750 (PDF page 89), for taxable years beginning after December 31, 2024. It does not print $31,500.",
+          "title": "Public Law 119-21, An Act to provide for reconciliation pursuant to title II of H. Con. Res. 14 (July 4, 2025), 139 Stat. 72",
+          "url": "https://www.govinfo.gov/content/pkg/PLAW-119publ21/pdf/PLAW-119publ21.pdf"
+        },
+        "key": "joint",
+        "parameter": "standard_deduction",
+        "pdf_page": 9,
+        "role": "states the figure in force",
+        "section": "section 3.01",
+        "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
+        "source_id": "irs-rev-proc-2025-32",
+        "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
+        "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+        "value": 31500
+      }
+    ],
+    "impact_engine": {
+      "name": "policyengine-us",
+      "role": "computed the tax amounts; not used to reach the verdict",
+      "version": "2.24.5"
+    },
+    "superseded_figures": []
+  },
+  "decision": {
+    "decision_date": "2026-03-10",
+    "findings": [
+      {
+        "decision_date": "2026-03-10",
+        "delta": 8000,
+        "document": "W2-1",
+        "entry": 0,
+        "in_force_document": {
+          "date": "2026-02-17",
+          "id": "W2C-1"
+        },
+        "in_force_value": 236000,
+        "kind": "SUPERSEDED_DOCUMENT",
+        "message": "wages for taxpayer = 228000: Box 1 of W2-1 (2026-01-22) is present but superseded on 2026-03-10, corrected by W2C-1 (2026-02-17). In force: 236000 (W2C-1). Delta +8000. To clear, supply 236000 from W2C-1.",
+        "person": "taxpayer",
+        "subject": "wages",
+        "superseded_document": {
+          "date": "2026-01-22",
+          "id": "W2-1"
+        },
+        "supplied_value": 228000
+      }
+    ],
+    "impact": {
+      "class": "tax_understated",
+      "error": -2560,
+      "message": "Federal income tax would be understated by $2560: $82286 as proposed, $84846 on the documents and figures in force.",
+      "proposed": {
+        "income_tax": 82286,
+        "inputs": {
+          "figures": {
+            "standard_deduction": 31500
+          },
+          "filing_status": "joint",
+          "persons": [
+            {
+              "age": 44,
+              "id": "spouse"
+            },
+            {
+              "age": 45,
+              "id": "taxpayer"
+            }
+          ],
+          "tax_year": 2025,
+          "wages": [
+            {
+              "amount": 204000,
+              "person": "spouse"
+            },
+            {
+              "amount": 228000,
+              "person": "taxpayer"
+            }
+          ]
+        },
+        "inputs_sha256": "19a63919896fe3c19537e470bb343ea13edeb495d98896eae327e82ea6c9f2b3"
+      },
+      "status": "computed",
+      "supported": {
+        "income_tax": 84846,
+        "inputs": {
+          "figures": {
+            "standard_deduction": 31500
+          },
+          "filing_status": "joint",
+          "persons": [
+            {
+              "age": 44,
+              "id": "spouse"
+            },
+            {
+              "age": 45,
+              "id": "taxpayer"
+            }
+          ],
+          "tax_year": 2025,
+          "wages": [
+            {
+              "amount": 204000,
+              "person": "spouse"
+            },
+            {
+              "amount": 236000,
+              "person": "taxpayer"
+            }
+          ]
+        },
+        "inputs_sha256": "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f"
+      }
+    },
+    "verdict": "STOP"
+  },
+  "inputs": {
+    "action": {
+      "action": "prepare_return",
+      "action_id": "tax_superseded_document",
+      "decision_date": "2026-03-10",
+      "fields": [
+        {
+          "document": "W2-1",
+          "name": "wages",
+          "person": "taxpayer",
+          "value": 228000
+        },
+        {
+          "document": "W2-2",
+          "name": "wages",
+          "person": "spouse",
+          "value": 204000
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "standard_deduction",
+          "source_id": "irs-rev-proc-2025-32",
+          "value": 31500
+        }
+      ],
+      "program": "FORM_1040",
+      "tax_year": 2025
+    },
+    "case_file_sha256": "b40faf3a66a093f66abaf78d979ee78cebc41254ee205e84a4bbd1d865ab8e41",
+    "impact_table_sha256": "65906c051336235b636176bbfa76c296d713a6c51ed62ad54c8f1d70945a7039",
+    "rulebook_sha256": "5667250381eb90b291dc147962db35e004cc4136d3f8920aba9ac1e62d5ffc5d"
+  },
+  "receipt_schema": "asof-gate/tax-receipt/1",
+  "receipt_sha256": "fe83ac216faf3d111d9ab929b3b21ad2aecd53abe9df89dac524a42659540349",
+  "rulebook": "form-1040-tax-year-2025",
+  "rulebook_version": "1"
+}

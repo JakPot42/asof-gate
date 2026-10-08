@@ -1,0 +1,101 @@
+{
+ "rulebook": "form-1040-tax-year-2025",
+ "rulebook_version": "1",
+ "scope": {
+  "program": "FORM_1040",
+  "tax_year": 2025,
+  "filing_statuses": [
+   "joint",
+   "head_of_household",
+   "single",
+   "separate"
+  ],
+  "note": "Federal individual income tax return for tax year 2025. Wages from Forms W-2 and W-2c, Box 1, and the basic standard deduction only. No person aged 65 or over or blind, no dependents, no other income, no itemized deductions, no credits."
+ },
+ "authority": {
+  "citation": "26 U.S.C. 63(c)(7), as amended by Public Law 119-21, section 70102",
+  "what_it_establishes": "Section 70102(b) of Public Law 119-21 prints two of the amounts, $23,625 and $15,750, and section 70102(c) applies them to taxable years beginning after December 31, 2024. It does not print the amount for a joint return. Rev. Proc. 2025-32 prints all four.",
+  "retrieved": "2026-10-08",
+  "retrieved_from": "govinfo.gov"
+ },
+ "sources": {
+  "public-law-119-21": {
+   "title": "Public Law 119-21, An Act to provide for reconciliation pursuant to title II of H. Con. Res. 14 (July 4, 2025), 139 Stat. 72",
+   "publisher": "U.S. Government Publishing Office",
+   "url": "https://www.govinfo.gov/content/pkg/PLAW-119publ21/pdf/PLAW-119publ21.pdf",
+   "file": "sources/public-law-119-21.pdf",
+   "sha256": "42f86c3d408bccb1a663c11a51a90d207b3dbc25e689240da51726154be51c8b",
+   "quote": "The amendments made by this section shall apply to taxable years beginning after December 31, 2024."
+  },
+  "irs-rev-proc-2024-40": {
+   "title": "Rev. Proc. 2024-40 (inflation-adjusted items for taxable years beginning in 2025)",
+   "publisher": "Internal Revenue Service",
+   "url": "https://www.irs.gov/pub/irs-drop/rp-24-40.pdf",
+   "file": "sources/irs-rev-proc-2024-40.pdf",
+   "sha256": "4de9db6b6662b5c305a59100a027051628823b42fd5817ea4e383ad4c302af1f",
+   "quote": "This revenue procedure sets forth inflation-adjusted items for 2025 for various Code provisions as in effect on October 22, 2024."
+  },
+  "irs-rev-proc-2025-32": {
+   "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
+   "publisher": "Internal Revenue Service",
+   "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+   "file": "sources/irs-rev-proc-2025-32.pdf",
+   "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
+   "quote": "Accordingly, section 2.15(1) of Rev. Proc. 2024-40 is removed."
+  }
+ },
+ "parameters": {
+  "standard_deduction": {
+   "unit": "USD per return",
+   "by": "filing_status",
+   "versions": [
+    {
+     "effective_from": "2024-10-22",
+     "effective_to": "2025-07-03",
+     "dates": "From the date Rev. Proc. 2024-40 says its figures are as of (PDF page 4) to the day before Public Law 119-21 was enacted.",
+     "source_id": "irs-rev-proc-2024-40",
+     "pdf_page": 12,
+     "section": "section 2.15(1)",
+     "enacted_by": null,
+     "values": {
+      "joint": 30000,
+      "head_of_household": 22500,
+      "single": 15000,
+      "separate": 15000
+     }
+    },
+    {
+     "effective_from": "2025-07-04",
+     "effective_to": "9999-12-31",
+     "dates": "From the enactment of Public Law 119-21 on July 4, 2025. Its section 70102(c) applies the amounts to the whole of tax year 2025.",
+     "source_id": "irs-rev-proc-2025-32",
+     "pdf_page": 9,
+     "section": "section 3.01",
+     "also_stated": "section 2.08, PDF page 6",
+     "enacted_by": {
+      "source_id": "public-law-119-21",
+      "pdf_page": 88,
+      "section": "section 70102(b) and (c), 139 Stat. 158-159",
+      "states": "Prints $23,625 (PDF page 88) and $15,750 (PDF page 89), for taxable years beginning after December 31, 2024. It does not print $31,500."
+     },
+     "values": {
+      "joint": 31500,
+      "head_of_household": 23625,
+      "single": 15750,
+      "separate": 15750
+     }
+    }
+   ]
+  }
+ },
+ "field_rules": {
+  "wages": {
+   "form_line": "Form 1040, line 1a",
+   "reads": "w2",
+   "corrected_by": "w2c",
+   "field": "box1_wages",
+   "label": "Form W-2",
+   "box": "Box 1"
+  }
+ }
+}

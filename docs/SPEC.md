@@ -11,6 +11,9 @@ tampered version 2 receipt and is not treated as one: the version 2 verifier che
 about it, says which format it is, and exits 1. Version 1 receipts verify with the version 1
 specification and verifier, which are kept at the git tag `v1`.
 
+A second path, for fields proposed for a tax return, is specified under "Tax path" at the end
+of this document. It adds to version 2 and changes nothing in it.
+
 ## Inputs
 
 1. **An action**: a proposed SNAP determination. It carries the benefit month
@@ -320,8 +323,9 @@ would not.
 
 `python verifier/verify_receipt.py RECEIPT --case CASE_FILE --rulebook RULEBOOK --impacts TABLE`
 
-A receipt whose `receipt_schema` is not `asof-gate/receipt/2` is not checked. The verifier
-says so, names the tag `v1` for version 1 receipts, and exits 1.
+A receipt whose `receipt_schema` is neither `asof-gate/receipt/2` nor
+`asof-gate/tax-receipt/1` (see "Tax path" below) is not checked. The verifier says so, names
+the tag `v1` for version 1 receipts, and exits 1.
 
 Exit 0 only when all of these hold:
 1. the case file, rulebook and impact table hash to the values recorded in the receipt,
@@ -331,3 +335,248 @@ Exit 0 only when all of these hold:
 4. `receipt_sha256` matches.
 
 Otherwise it exits 1 and says which check failed.
+
+## Tax path
+
+The same gate, applied to a second kind of action: the fields an extraction step proposes for
+a Form 1040, checked before they enter the return. Everything above this heading is the SNAP
+path and is unchanged. A tax receipt has its own schema, `asof-gate/tax-receipt/1`, and the
+same verifier checks it.
+
+**The in-force rule covers documents as well as figures.** On the SNAP path a document goes
+out of force when a later document of the same series replaces it. On the tax path a document
+goes out of force field by field, when a correction states that field: a Form W-2c that states
+Box 1 supersedes Box 1 of the Form W-2 it corrects, and nothing else on it. A stop for a
+superseded document names the field, the document cited, and the document and value in force
+instead, in the same words a stop for a superseded figure uses: present, but not in force.
+
+### Inputs
+
+1. **An action**: `tax_year`, `decision_date` (the day the return is prepared), the proposed
+   `fields`, and the legal `numbers` used. A field entry is
+   `{"name": "wages", "person", "value", "document"}`: one Form W-2 or W-2c, one person, the
+   Box 1 amount. It carries no tax amount.
+2. **The case file**: `tax_year`, `filing_status`, the `persons` on the return (`id`, `age`)
+   and the `documents`. A `w2` has an integer `box1_wages`. A `w2c` has `corrects` (the id of
+   the `w2` it corrects) and `correct_information` (the fields it restates, as integers).
+3. **The rulebook**: each legal figure by filing status, with the dates it is in force, the
+   document, section and PDF page that print it, and, where a statute changed it, the statute
+   (`enacted_by`).
+4. **The impact table**: tax amounts computed outside the gate, keyed by the hash of the
+   inputs they were computed from (Rule T3).
+
+Integers only, as on the SNAP path. Dollar amounts are whole dollars.
+
+### Invalid inputs
+
+Rejected, not decided:
+
+- a float in any input, or a boolean in the action;
+- a case file whose `filing_status` is not a string or whose `tax_year` is not an integer; a
+  person without a string `id` and an integer `age`, or two persons with the same `id`;
+- a document without string `id`, `type`, `person`, `payer` and `date`, two documents with the
+  same `id`, or a document naming a person who is not on the return;
+- a `w2` without an integer `box1_wages`;
+- a `w2c` whose `corrects` is not a `w2` in the case file for the same person and payer, which
+  is dated before that `w2`, or whose `correct_information` is not a set of integers;
+- an action whose `tax_year` is not the case file's, or with no string `decision_date`;
+- a `wages` entry without an integer `value`, a string `person` and a string `document`;
+- a number without a string `parameter` and an integer `value`.
+
+Field entries whose `name` is not in `field_rules` are ignored.
+
+### Documents in force
+
+For a Form W-2 `F` and the decision date `d`:
+
+- if `F` is dated after `d`, nothing is in force for it;
+- otherwise, among the W-2c documents that correct `F`, state Box 1 and are dated on or before
+  `d`, the latest by `(date, id)` is **in force** for Box 1, and its value is the value in
+  force;
+- if there is none, `F` itself is in force with its own Box 1.
+
+**In force for a person** is that result for each of the person's Forms W-2, in `(date, id)`
+order of the form: `{"document", "in_force_document", "in_force_date", "value"}`.
+
+### Rule T1: every field traces to the named person's document in force
+
+For each `wages` entry, in the order the action lists them, the first of these that applies
+is the finding:
+
+1. the `document` is the empty string: `FACT_NOT_IN_SOURCE`, reason `no_document_cited`;
+2. it is not in the case file: reason `document_not_in_case_file`;
+3. it is neither a `w2` nor a `w2c`: reason `wrong_document_type`;
+4. the form (the cited `w2`, or the `w2` the cited `w2c` corrects) names a different person
+   than the entry: `WRONG_PERSON`, with `document_person`, `person_in_force` (what is in force
+   for the entry's person) and `supported_value` (the sum of those values, or null when there
+   are none);
+5. the cited document is dated after the decision date: `FACT_NOT_IN_SOURCE`, reason
+   `document_dated_after_decision`;
+6. the cited document is a W-2c that does not state Box 1: `FACT_NOT_IN_SOURCE`, reason
+   `field_not_in_document`, with `in_force_document` (id and date) and `supported_value`, the
+   value in force;
+7. the cited document is not the document in force for the form: `SUPERSEDED_DOCUMENT`, with
+   `superseded_document` and `in_force_document` (id and date of each), `in_force_value`, and
+   `delta`, the value in force minus the supplied value;
+8. an earlier entry that got past step 4 reads the same form: `FACT_NOT_IN_SOURCE`, reason
+   `document_already_used`, with `form`;
+9. the value is not the value in force: `FACT_NOT_IN_SOURCE`, reason `value_not_supported`,
+   with `supported_value`.
+
+An entry that gets past step 4 **reads** its form, whatever happens at steps 5 to 9.
+
+Then, for each person on the return by `id`, and each of that person's forms that has
+something in force and that no entry reads: finding `FACT_MISSING`, with `person`, `document`
+(the form), `in_force_document` and `in_force_value`. A return that leaves out a Form W-2 is
+stopped like one that misreads it.
+
+Step 7 applies whenever the cited document is not the one in force, even if the value supplied
+happens to be right. The entry must cite the document that states the value.
+
+### Rule T2: every legal figure is the one in force on the decision date
+
+If the case file's `filing_status` is not in the rulebook's `filing_statuses`: finding
+`OUT_OF_SCOPE`, and Rule T2 is not applied. Otherwise it is Rule 2 above, with the filing
+status as the cell of every parameter. A `NUMBER_NOT_IN_FORCE` finding also carries:
+
+- `in_force`: `{"source_id", "section", "pdf_page"}` of the version in force;
+- `enacted_by`: the same three for that version's `enacted_by`, or null;
+- for reason `value_out_of_date`, `superseded`: the same three for the version the supplied
+  value comes from.
+
+### Verdict
+
+`STOP` if there is at least one finding, otherwise `CLEAR`. Every finding carries `document`:
+the document cited, the form for `FACT_MISSING`, and the empty string for findings about
+numbers and scope. Findings are sorted by `(kind, subject, entry, document)`.
+
+### Rule T3: what the stop would have done to the tax
+
+**Return inputs:**
+
+```
+{
+  "tax_year": <from the action>,
+  "filing_status": <from the case file>,
+  "persons": [{"id", "age"} for each person on the return, by id],
+  "wages": [{"person", "amount"} for each person on the return, by id],
+  "figures": {<parameter>: <value> for every parameter in the rulebook}
+}
+```
+
+- **As proposed**: each person's `amount` is the sum of the values of the `wages` entries that
+  name them, and the figures are the numbers supplied. Available only when the filing status
+  is in scope, every `wages` entry names a person on the return, and every parameter was
+  supplied.
+- **As supported**: each person's `amount` is the sum of the values in force for that person,
+  and each figure is the cell in force on the decision date. Available only when the filing
+  status is in scope and every parameter has a version in force.
+
+The supported side is read from the case file, not from the entries. That is how a wrong
+person or a missing form is priced.
+
+**Lookup.** As on the SNAP path. The table maps keys to `{"income_tax": whole dollars}`.
+
+**The `impact` block:**
+
+- No findings: `{"status": "clear", "proposed": <as proposed, looked up>, "supported": null}`.
+- Otherwise `status` is `not_computed` with the first `reason` that applies
+  (`proposed_inputs_incomplete`, `supported_inputs_unavailable`, `not_in_impact_table`), or
+  `computed`.
+
+When computed, `error` is the tax as proposed minus the tax as supported, and `class` is
+`no_tax_impact` (0), `tax_overstated` (above 0) or `tax_understated` (below 0). There is no
+tolerance on this path and no label beyond the class.
+
+Each side is `{"inputs", "inputs_sha256", "income_tax"}`.
+
+### Messages
+
+`{who}` is `wages for {person} = {supplied_value}`. `{label}` and `{box}` come from the field
+rule (`Form W-2`, `Box 1`). `{cite X}` is `{source_id}, {section}, PDF page {pdf_page}` of `X`.
+`{delta}` is written with a sign. `{name}` is `{subject}[{key}]`, or `{subject}` for
+`UNKNOWN_PARAMETER`. Findings of kind `FACT_NOT_IN_SOURCE` and `SUPERSEDED_DOCUMENT` carry
+`decision_date`.
+
+- `FACT_MISSING`: `wages for {person}: {document} is in the case file and no entry reads it. In force: {in_force_value} ({in_force_document id}).`
+- `OUT_OF_SCOPE`: `filing_status = {supplied_value}: outside the filing statuses this rulebook covers.`
+- `FACT_NOT_IN_SOURCE`, by reason:
+  - `no_document_cited`: `{who}: no document is cited. To clear, cite the {label} it comes from.`
+  - `document_not_in_case_file`: `{who}: the cited document ({document}) is not in the case file.`
+  - `wrong_document_type`: `{who}: this field is read from a {label} or a correction of one, and {document} is neither.`
+  - `document_dated_after_decision`: `{who}: {document} is dated after the decision date {decision_date}.`
+  - `field_not_in_document`: `{who}: {document} does not state {box}. In force: {supported_value} ({in_force_document id}).`
+  - `document_already_used`: `{who}: {form} is already read by an earlier entry.`
+  - `value_not_supported`: `{who}: not supported by {document}, which gives {supported_value}. To clear, supply {supported_value}.`
+- `WRONG_PERSON`: `{who}: present in a source, but not in {person}'s document: {document} names {document_person}.`
+  and then a space and either `The case file has no {label} for {person}.` or
+  `In force for {person}: {items}.`, where the items are joined with `; ` and each is
+  `{value} ({document})` when the form itself is in force and
+  `{value} ({in_force_document}, correcting {document})` otherwise.
+- `SUPERSEDED_DOCUMENT`: `{who}: {box} of {superseded id} ({date}) is present but superseded on {decision_date}, corrected by {in force id} ({date}). In force: {in_force_value} ({in force id}). Delta {delta}. To clear, supply {in_force_value} from {in force id}.`
+- `NUMBER_MISSING`: `{name}: not supplied. The return needs the value in force on {decision_date}.`
+- `NUMBER_NO_VERSION_IN_FORCE`: `{name}: no version in the rulebook is in force on {decision_date}.`
+- `UNKNOWN_PARAMETER`: `{name}: not a parameter in this rulebook.`
+- `NUMBER_NOT_IN_FORCE`. `{now}` is `{in_force_value} ({cite in_force})` and, when `enacted_by`
+  is not null, `, enacted by {cite enacted_by}`.
+  - `value_out_of_date`: `{name}: {supplied_value} is present but not in force on {decision_date}; it was in force {supplied_effective_from} to {supplied_effective_to} ({cite superseded}). In force on {decision_date}: {now}. Delta {delta}. To clear, supply {in_force_value} from a source in force on {decision_date}.`
+  - `source_not_in_force`: `{name}: {supplied_value} is the value in force on {decision_date}, but the cited source {supplied_source_id} is not the one in force. To clear, cite {in_force source_id}.`
+  - `value_unknown`: `{name}: {supplied_value} is not a value of this parameter in any version. In force on {decision_date}: {now}. Delta {delta}.`
+
+Impact messages. `{p}` and `{s}` are the tax as proposed and as supported, `{e}` the size of
+the error without its sign.
+
+- `clear`: `No stop, so no error to measure.` and then, when the lookup found a row, a space
+  and `On these fields the federal income tax is ${p}.`
+- `not_computed`: `Tax impact not computed ({reason}).`
+- `no_tax_impact`: `No tax impact: federal income tax of ${p} as proposed and on the documents and figures in force.`
+- `tax_overstated`: `Federal income tax would be overstated by ${e}: ${p} as proposed, ${s} on the documents and figures in force.`
+- `tax_understated`: the same with `understated`.
+
+### Tax receipt
+
+```
+{
+  "receipt_schema": "asof-gate/tax-receipt/1",
+  "rulebook": <rulebook name>,
+  "rulebook_version": <rulebook_version>,
+  "inputs": {"action", "case_file_sha256", "rulebook_sha256", "impact_table_sha256"},
+  "citations": {
+    "authority": {"citation": <authority.citation>,
+                  "role": "the statute that sets the amounts; each figure is cited to the page that prints it"},
+    "figures": [when the filing status is in scope, one entry per parameter with a version in
+      force on the decision date, in rulebook order:
+      {"parameter", "key", "value", <where>, "effective_from", "effective_to",
+       "role": "states the figure in force",
+       "enacted_by": null, or {<where> of the version's enacted_by, "states"}}],
+    "superseded_figures": [one entry per NUMBER_NOT_IN_FORCE finding with reason
+      value_out_of_date, for the version the supplied value comes from:
+      {"parameter", "key", "value", <where>, "effective_from", "effective_to",
+       "role": "stated the figure before it was changed"}],
+    "impact_engine": {"name", "version",
+                      "role": "computed the tax amounts; not used to reach the verdict"}
+  },
+  "decision": {"decision_date", "verdict", "findings", "impact"},
+  "receipt_sha256": <sha256 of the canonical form of every other field>
+}
+```
+
+`<where>` is `source_id`, `section` and `pdf_page` from the version (or from its
+`enacted_by`), and `title`, `url` and `sha256` from the rulebook's `sources` entry.
+
+A receipt for a superseded figure therefore cites both documents: the one that states the
+figure in force, and the one that stated the figure supplied. Where a statute made the change
+it is cited too, with what it prints and what it does not. Public Law 119-21 prints $23,625
+and $15,750. It does not print the $31,500 for a joint return; Rev. Proc. 2025-32 does, and
+that is the document the figure is cited to.
+
+### What the verifier does and does not establish on this path
+
+The same as on the SNAP path. The verdict and every finding are recomputed from the case file
+and the rulebook alone. The class is recomputed from those plus the impact table. The tax
+amounts themselves are PolicyEngine's and are not recomputed by the verifier;
+`tools/policyengine_tax_tool.py impacts` reruns them.
+
+The same command verifies both kinds of receipt:
+
+`python verifier/verify_receipt.py RECEIPT --case CASE_FILE --rulebook RULEBOOK --impacts TABLE`

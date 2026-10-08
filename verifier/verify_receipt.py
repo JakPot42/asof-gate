@@ -2,6 +2,9 @@
 
     python verifier/verify_receipt.py RECEIPT --case CASE_FILE --rulebook RULEBOOK --impacts TABLE
 
+Checks both kinds of receipt: SNAP determinations (asof-gate/receipt/2) and Form 1040 field
+checks (asof-gate/tax-receipt/1).
+
 Written from docs/SPEC.md, not from the gate. It imports nothing from `asof_gate` and uses
 only the Python standard library, so it can be read, audited and run on its own. It rebuilds
 the entire receipt from the inputs and accepts it only if every byte of the canonical form
@@ -531,11 +534,464 @@ def rebuild(action: dict, case_bytes: bytes, rb_bytes: bytes, table_bytes: bytes
     return body
 
 
+# --- Tax path (SPEC, "Tax path") -------------------------------------------------------
+#
+# A second, separate recomputation, for receipts whose schema is TAX_SCHEMA. Written from the
+# specification like the rest of this file. It shares nothing with the gate's tax module.
+
+TAX_SCHEMA = "asof-gate/tax-receipt/1"
+
+
+def tax_check_inputs(action, case, rb, table) -> None:
+    if contains(action, (float, bool)):
+        raise Invalid("floating-point or boolean value in the action")
+    if contains(case, float) or contains(rb, float) or contains(table, float):
+        raise Invalid("floating-point value in the case file, rulebook or impact table")
+    if type(case.get("filing_status")) is not str or not whole_number(case.get("tax_year")):
+        raise Invalid("the case file needs a filing status and an integer tax year")
+    on_return = []
+    for person in case["persons"]:
+        if type(person.get("id")) is not str or not whole_number(person.get("age")):
+            raise Invalid("a person lacks an id or an integer age")
+        if person["id"] in on_return:
+            raise Invalid("person id repeated: " + person["id"])
+        on_return.append(person["id"])
+    rule = rb["field_rules"]["wages"]
+    index = {}
+    for doc in case["documents"]:
+        for field in ("id", "type", "person", "payer", "date"):
+            if type(doc.get(field)) is not str:
+                raise Invalid("a document lacks " + field)
+        if doc["id"] in index:
+            raise Invalid("document id repeated: " + doc["id"])
+        if doc["person"] not in on_return:
+            raise Invalid(doc["id"] + " names a person who is not on the return")
+        index[doc["id"]] = doc
+    for doc in case["documents"]:
+        if doc["type"] == rule["reads"]:
+            if not whole_number(doc.get(rule["field"])):
+                raise Invalid(doc["id"] + " has no integer " + rule["field"])
+        elif doc["type"] == rule["corrected_by"]:
+            target = index.get(doc.get("corrects"))
+            if target is None or target["type"] != rule["reads"]:
+                raise Invalid(doc["id"] + " does not correct a form in the case file")
+            if target["person"] != doc["person"] or target["payer"] != doc["payer"]:
+                raise Invalid(doc["id"] + " corrects a form of another person or payer")
+            if doc["date"] < target["date"]:
+                raise Invalid(doc["id"] + " is dated before the form it corrects")
+            stated = doc.get("correct_information")
+            if type(stated) is not dict or any(not whole_number(v) for v in stated.values()):
+                raise Invalid(doc["id"] + " correct_information must hold integers")
+    if not whole_number(action.get("tax_year")) or action["tax_year"] != case["tax_year"]:
+        raise Invalid("the action's tax year is not the case file's")
+    if type(action.get("decision_date")) is not str:
+        raise Invalid("the action has no decision date")
+    for entry in action.get("fields", []):
+        if entry.get("name") in rb["field_rules"]:
+            if not whole_number(entry.get("value")):
+                raise Invalid("a field entry has no integer value")
+            if type(entry.get("person")) is not str or type(entry.get("document")) is not str:
+                raise Invalid("a field entry must name a person and a document")
+    for number in action.get("numbers", []):
+        if type(number.get("parameter")) is not str or not whole_number(number.get("value")):
+            raise Invalid("a number lacks a parameter name or an integer value")
+
+
+def standing(form, case, rule, date):
+    """(document, value) that stands for the form's field on `date`, or None before the form
+    exists. A correction that states the field replaces the form; the latest one wins."""
+    if form["date"] > date:
+        return None
+    chosen, value = form, form[rule["field"]]
+    for doc in by_date(case["documents"]):
+        if doc["type"] != rule["corrected_by"] or doc.get("corrects") != form["id"]:
+            continue
+        if doc["date"] <= date and rule["field"] in doc["correct_information"]:
+            chosen, value = doc, doc["correct_information"][rule["field"]]
+    return chosen, value
+
+
+def standing_for_person(person, case, rule, date) -> list:
+    rows = []
+    for form in by_date(case["documents"]):
+        if form["type"] == rule["reads"] and form["person"] == person:
+            now = standing(form, case, rule, date)
+            if now is not None:
+                rows.append({"document": form["id"], "in_force_document": now[0]["id"],
+                             "in_force_date": now[0]["date"], "value": now[1]})
+    return rows
+
+
+def tax_examine_fields(action, case, rb) -> list:
+    rule = rb["field_rules"]["wages"]
+    date = action["decision_date"]
+    lookup = {d["id"]: d for d in case["documents"]}
+    claimed, found = [], []
+    for position, entry in enumerate(action.get("fields", [])):
+        if entry.get("name") != "wages":
+            continue
+        finding = {"subject": "wages", "entry": position, "person": entry["person"],
+                   "supplied_value": entry["value"], "document": entry["document"]}
+        doc = lookup.get(entry["document"])
+        reason = None
+        if not entry["document"]:
+            reason = "no_document_cited"
+        elif doc is None:
+            reason = "document_not_in_case_file"
+        elif doc["type"] != rule["reads"] and doc["type"] != rule["corrected_by"]:
+            reason = "wrong_document_type"
+        if reason is not None:
+            finding.update(kind="FACT_NOT_IN_SOURCE", reason=reason, decision_date=date)
+            found.append(finding)
+            continue
+
+        form = lookup[doc["corrects"]] if doc["type"] == rule["corrected_by"] else doc
+        if form["person"] != entry["person"]:
+            theirs = standing_for_person(entry["person"], case, rule, date)
+            total = None
+            if theirs:
+                total = 0
+                for row in theirs:
+                    total += row["value"]
+            finding.update(kind="WRONG_PERSON", document_person=form["person"],
+                           person_in_force=theirs, supported_value=total)
+            found.append(finding)
+            continue
+
+        seen_before = form["id"] in claimed
+        claimed.append(form["id"])
+        if doc["date"] > date:
+            finding.update(kind="FACT_NOT_IN_SOURCE", reason="document_dated_after_decision",
+                           decision_date=date)
+            found.append(finding)
+            continue
+        current, amount = standing(form, case, rule, date)
+        silent = doc["type"] == rule["corrected_by"] and rule["field"] not in doc["correct_information"]
+        if silent:
+            finding.update(kind="FACT_NOT_IN_SOURCE", reason="field_not_in_document",
+                           decision_date=date, in_force_document=ref(current),
+                           supported_value=amount)
+            found.append(finding)
+        elif current["id"] != doc["id"]:
+            finding.update(kind="SUPERSEDED_DOCUMENT", decision_date=date,
+                           superseded_document=ref(doc), in_force_document=ref(current),
+                           in_force_value=amount, delta=amount - entry["value"])
+            found.append(finding)
+        elif seen_before:
+            finding.update(kind="FACT_NOT_IN_SOURCE", reason="document_already_used",
+                           decision_date=date, form=form["id"])
+            found.append(finding)
+        elif amount != entry["value"]:
+            finding.update(kind="FACT_NOT_IN_SOURCE", reason="value_not_supported",
+                           decision_date=date, supported_value=amount)
+            found.append(finding)
+
+    for person in sorted(p["id"] for p in case["persons"]):
+        for row in standing_for_person(person, case, rule, date):
+            if row["document"] in claimed:
+                continue
+            found.append({"kind": "FACT_MISSING", "subject": "wages", "entry": -1,
+                          "person": person, "document": row["document"],
+                          "in_force_document": {"id": row["in_force_document"],
+                                                "date": row["in_force_date"]},
+                          "in_force_value": row["value"]})
+    return found
+
+
+def place(version) -> dict:
+    return {"source_id": version["source_id"], "section": version["section"],
+            "pdf_page": version["pdf_page"]}
+
+
+def tax_examine_numbers(action, rb, status) -> list:
+    date = action["decision_date"]
+    given = {}
+    for number in action.get("numbers", []):
+        given[number["parameter"]] = number
+    found = [{"kind": "UNKNOWN_PARAMETER", "subject": name, "entry": -1, "document": ""}
+             for name in given if name not in rb["parameters"]]
+    for name in rb["parameters"]:
+        versions = rb["parameters"][name]["versions"]
+        finding = {"subject": name, "entry": -1, "document": "", "key": status,
+                   "decision_date": date}
+        if name not in given:
+            finding["kind"] = "NUMBER_MISSING"
+            found.append(finding)
+            continue
+        current = version_on(versions, date)
+        if current is None:
+            finding["kind"] = "NUMBER_NO_VERSION_IN_FORCE"
+            found.append(finding)
+            continue
+        value, cited = given[name]["value"], given[name].get("source_id")
+        correct = current["values"][status]
+        if value == correct and cited == current["source_id"]:
+            continue
+        finding.update(kind="NUMBER_NOT_IN_FORCE", supplied_value=value, supplied_source_id=cited,
+                       in_force_value=correct, in_force=place(current),
+                       enacted_by=place(current["enacted_by"]) if current["enacted_by"] else None,
+                       delta=correct - value)
+        earlier = None
+        for candidate in versions:
+            if candidate["values"][status] == value:
+                if earlier is None or candidate["effective_from"] > earlier["effective_from"]:
+                    earlier = candidate
+        if value == correct:
+            finding["reason"] = "source_not_in_force"
+        elif earlier is None:
+            finding["reason"] = "value_unknown"
+        else:
+            finding["reason"] = "value_out_of_date"
+            finding["supplied_effective_from"] = earlier["effective_from"]
+            finding["supplied_effective_to"] = earlier["effective_to"]
+            finding["superseded"] = place(earlier)
+        found.append(finding)
+    return found
+
+
+def cited_at(where) -> str:
+    return "{}, {}, PDF page {}".format(where["source_id"], where["section"], where["pdf_page"])
+
+
+TAX_NOT_IN_SOURCE = {
+    "no_document_cited": "no document is cited. To clear, cite the {label} it comes from.",
+    "document_not_in_case_file": "the cited document ({document}) is not in the case file.",
+    "wrong_document_type": "this field is read from a {label} or a correction of one, and "
+                           "{document} is neither.",
+    "document_dated_after_decision": "{document} is dated after the decision date {decision_date}.",
+    "field_not_in_document": "{document} does not state {box}. In force: {supported_value} "
+                             "({holder}).",
+    "document_already_used": "{form} is already read by an earlier entry.",
+    "value_not_supported": "not supported by {document}, which gives {supported_value}. "
+                           "To clear, supply {supported_value}.",
+}
+
+
+def tax_describe(f, rb) -> str:
+    rule = rb["field_rules"]["wages"]
+    kind = f["kind"]
+    name = f["subject"] + ("[" + f["key"] + "]" if "key" in f else "")
+    if kind == "OUT_OF_SCOPE":
+        return ("filing_status = " + f["supplied_value"]
+                + ": outside the filing statuses this rulebook covers.")
+    if kind == "FACT_MISSING":
+        return ("{subject} for {person}: {document} is in the case file and no entry reads it. "
+                "In force: {in_force_value} ({holder}).").format(
+                    holder=f["in_force_document"]["id"], **f)
+    if kind == "UNKNOWN_PARAMETER":
+        return name + ": not a parameter in this rulebook."
+    if kind == "NUMBER_MISSING":
+        return (name + ": not supplied. The return needs the value in force on "
+                + f["decision_date"] + ".")
+    if kind == "NUMBER_NO_VERSION_IN_FORCE":
+        return name + ": no version in the rulebook is in force on " + f["decision_date"] + "."
+    if kind == "NUMBER_NOT_IN_FORCE":
+        day = f["decision_date"]
+        standing_now = "{} ({})".format(f["in_force_value"], cited_at(f["in_force"]))
+        if f["enacted_by"]:
+            standing_now += ", enacted by " + cited_at(f["enacted_by"])
+        if f["reason"] == "source_not_in_force":
+            return ("{}: {} is the value in force on {}, but the cited source {} is not the one "
+                    "in force. To clear, cite {}.").format(
+                        name, f["supplied_value"], day, f["supplied_source_id"],
+                        f["in_force"]["source_id"])
+        if f["reason"] == "value_unknown":
+            return ("{}: {} is not a value of this parameter in any version. In force on {}: "
+                    "{}. Delta {}.").format(name, f["supplied_value"], day, standing_now,
+                                           signed(f["delta"]))
+        return ("{}: {} is present but not in force on {}; it was in force {} to {} ({}). "
+                "In force on {}: {}. Delta {}. To clear, supply {} from a source in force on "
+                "{}.").format(name, f["supplied_value"], day, f["supplied_effective_from"],
+                              f["supplied_effective_to"], cited_at(f["superseded"]), day,
+                              standing_now, signed(f["delta"]), f["in_force_value"], day)
+
+    subject = "{} for {} = {}".format(f["subject"], f["person"], f["supplied_value"])
+    if kind == "FACT_NOT_IN_SOURCE":
+        holder = f["in_force_document"]["id"] if "in_force_document" in f else ""
+        return subject + ": " + TAX_NOT_IN_SOURCE[f["reason"]].format(
+            label=rule["label"], box=rule["box"], holder=holder, **f)
+    if kind == "SUPERSEDED_DOCUMENT":
+        was, now = f["superseded_document"], f["in_force_document"]
+        return ("{}: {} of {} ({}) is present but superseded on {}, corrected by {} ({}). "
+                "In force: {} ({}). Delta {}. To clear, supply {} from {}.").format(
+                    subject, rule["box"], was["id"], was["date"], f["decision_date"], now["id"],
+                    now["date"], f["in_force_value"], now["id"], signed(f["delta"]),
+                    f["in_force_value"], now["id"])
+    if kind == "WRONG_PERSON":
+        text = "{}: present in a source, but not in {}'s document: {} names {}.".format(
+            subject, f["person"], f["document"], f["document_person"])
+        pieces = []
+        for row in f["person_in_force"]:
+            if row["document"] == row["in_force_document"]:
+                pieces.append("{} ({})".format(row["value"], row["document"]))
+            else:
+                pieces.append("{} ({}, correcting {})".format(
+                    row["value"], row["in_force_document"], row["document"]))
+        if pieces:
+            return text + " In force for " + f["person"] + ": " + "; ".join(pieces) + "."
+        return text + " The case file has no " + rule["label"] + " for " + f["person"] + "."
+    raise Invalid("unknown finding kind " + kind)
+
+
+def return_side(action, case, wages_by_person, figures, table) -> dict:
+    persons = [{"id": p["id"], "age": p["age"]} for p in case["persons"]]
+    persons.sort(key=lambda p: p["id"])
+    inputs = {
+        "tax_year": action["tax_year"],
+        "filing_status": case["filing_status"],
+        "persons": persons,
+        "wages": [{"person": p["id"], "amount": wages_by_person.get(p["id"], 0)} for p in persons],
+        "figures": figures,
+    }
+    key = digest(canonical_bytes(inputs))
+    hit = table["results"].get(key)
+    return {"inputs": inputs, "inputs_sha256": key,
+            "income_tax": hit["income_tax"] if hit is not None else None}
+
+
+def tax_measure(action, case, rb, table, findings, covered) -> dict:
+    date = action["decision_date"]
+    rule = rb["field_rules"]["wages"]
+    names = list(rb["parameters"])
+    ids = [p["id"] for p in case["persons"]]
+
+    proposed = None
+    given = {n["parameter"]: n["value"] for n in action.get("numbers", [])}
+    entries = [e for e in action.get("fields", []) if e.get("name") == "wages"]
+    strangers = [e for e in entries if e["person"] not in ids]
+    if covered and not strangers and not [n for n in names if n not in given]:
+        totals = {}
+        for e in entries:
+            totals[e["person"]] = totals.get(e["person"], 0) + e["value"]
+        proposed = return_side(action, case, totals, {n: given[n] for n in names}, table)
+
+    if not findings:
+        return {"status": "clear", "proposed": proposed, "supported": None}
+    if proposed is None:
+        return {"status": "not_computed", "reason": "proposed_inputs_incomplete",
+                "proposed": None, "supported": None}
+    current = {n: version_on(rb["parameters"][n]["versions"], date) for n in names}
+    if not covered or any(v is None for v in current.values()):
+        return {"status": "not_computed", "reason": "supported_inputs_unavailable",
+                "proposed": proposed, "supported": None}
+    totals = {}
+    for person in ids:
+        totals[person] = 0
+        for row in standing_for_person(person, case, rule, date):
+            totals[person] += row["value"]
+    figures = {n: current[n]["values"][case["filing_status"]] for n in names}
+    supported = return_side(action, case, totals, figures, table)
+    if proposed["income_tax"] is None or supported["income_tax"] is None:
+        return {"status": "not_computed", "reason": "not_in_impact_table",
+                "proposed": proposed, "supported": supported}
+    gap = proposed["income_tax"] - supported["income_tax"]
+    label = "tax_overstated" if gap > 0 else "tax_understated" if gap < 0 else "no_tax_impact"
+    return {"status": "computed", "proposed": proposed, "supported": supported, "error": gap,
+            "class": label}
+
+
+def tax_impact_text(impact) -> str:
+    status = impact["status"]
+    if status == "not_computed":
+        return "Tax impact not computed (" + impact["reason"] + ")."
+    if status == "clear":
+        text = "No stop, so no error to measure."
+        side = impact["proposed"]
+        if side is not None and side["income_tax"] is not None:
+            text += " On these fields the federal income tax is ${}.".format(side["income_tax"])
+        return text
+    as_proposed = impact["proposed"]["income_tax"]
+    as_supported = impact["supported"]["income_tax"]
+    if impact["class"] == "no_tax_impact":
+        return ("No tax impact: federal income tax of ${} as proposed and on the documents and "
+                "figures in force.").format(as_proposed)
+    direction = {"tax_overstated": "overstated", "tax_understated": "understated"}[impact["class"]]
+    size = impact["error"] if impact["error"] > 0 else -impact["error"]
+    return ("Federal income tax would be {} by ${}: ${} as proposed, ${} on the documents and "
+            "figures in force.").format(direction, size, as_proposed, as_supported)
+
+
+def tax_source(rb, where) -> dict:
+    entry = rb["sources"][where["source_id"]]
+    return {"source_id": where["source_id"], "title": entry["title"], "url": entry["url"],
+            "section": where["section"], "pdf_page": where["pdf_page"], "sha256": entry["sha256"]}
+
+
+def tax_rebuild(action: dict, case_bytes: bytes, rb_bytes: bytes, table_bytes: bytes) -> dict:
+    rb, case, table = json.loads(rb_bytes), json.loads(case_bytes), json.loads(table_bytes)
+    tax_check_inputs(action, case, rb, table)
+    date, status = action["decision_date"], case["filing_status"]
+    covered = status in rb["scope"]["filing_statuses"]
+
+    findings = tax_examine_fields(action, case, rb)
+    if covered:
+        findings.extend(tax_examine_numbers(action, rb, status))
+    else:
+        findings.append({"kind": "OUT_OF_SCOPE", "subject": "filing_status", "entry": -1,
+                         "document": "", "supplied_value": status})
+    for f in findings:
+        f["message"] = tax_describe(f, rb)
+    findings = sorted(findings, key=lambda f: (f["kind"], f["subject"], f["entry"], f["document"]))
+    impact = tax_measure(action, case, rb, table, findings, covered)
+    impact["message"] = tax_impact_text(impact)
+
+    in_force, replaced = [], []
+    if covered:
+        for name, param in rb["parameters"].items():
+            version = version_on(param["versions"], date)
+            if version is None:
+                continue
+            row = {"parameter": name, "key": status, "value": version["values"][status]}
+            row.update(tax_source(rb, version))
+            row.update(effective_from=version["effective_from"],
+                       effective_to=version["effective_to"], role="states the figure in force",
+                       enacted_by=None)
+            if version["enacted_by"]:
+                row["enacted_by"] = tax_source(rb, version["enacted_by"])
+                row["enacted_by"]["states"] = version["enacted_by"]["states"]
+            in_force.append(row)
+            for f in findings:
+                stale = f["kind"] == "NUMBER_NOT_IN_FORCE" and f["subject"] == name \
+                    and f["reason"] == "value_out_of_date"
+                if not stale:
+                    continue
+                old = [x for x in param["versions"]
+                       if x["effective_from"] == f["supplied_effective_from"]][0]
+                gone = {"parameter": name, "key": status, "value": old["values"][status]}
+                gone.update(tax_source(rb, old))
+                gone.update(effective_from=old["effective_from"], effective_to=old["effective_to"],
+                            role="stated the figure before it was changed")
+                replaced.append(gone)
+
+    body = {
+        "receipt_schema": TAX_SCHEMA,
+        "rulebook": rb["rulebook"],
+        "rulebook_version": rb["rulebook_version"],
+        "inputs": {"action": action, "case_file_sha256": digest(case_bytes),
+                   "rulebook_sha256": digest(rb_bytes), "impact_table_sha256": digest(table_bytes)},
+        "citations": {
+            "authority": {"citation": rb["authority"]["citation"],
+                          "role": "the statute that sets the amounts; each figure is cited to "
+                                  "the page that prints it"},
+            "figures": in_force,
+            "superseded_figures": replaced,
+            "impact_engine": {"name": table["engine"]["name"], "version": table["engine"]["version"],
+                              "role": "computed the tax amounts; not used to reach the verdict"},
+        },
+        "decision": {"decision_date": date, "verdict": "STOP" if findings else "CLEAR",
+                     "findings": findings, "impact": impact},
+    }
+    body["receipt_sha256"] = digest(canonical_bytes(body))
+    return body
+
+
 def verify(receipt_path: Path, case_path: Path, rulebook_path: Path, impacts_path: Path) -> list:
     """Return a list of failed checks; empty means the receipt verifies."""
     problems = []
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    if receipt.get("receipt_schema") != SCHEMA:
+    recompute = {SCHEMA: rebuild, TAX_SCHEMA: tax_rebuild}.get(receipt.get("receipt_schema"))
+    is_tax = receipt.get("receipt_schema") == TAX_SCHEMA
+    if recompute is None:
         # Not checked at all: a version 1 receipt is a different format, not a tampered one.
         return [f"this receipt's schema is {receipt.get('receipt_schema')!r}, not {SCHEMA!r}. "
                 "Nothing about it was checked. A version 1 receipt (asof-gate/receipt/1) "
@@ -566,7 +1022,7 @@ def verify(receipt_path: Path, case_path: Path, rulebook_path: Path, impacts_pat
         problems.append("receipt_sha256 does not match the receipt's own contents")
 
     try:
-        rebuilt = rebuild(receipt["inputs"]["action"], case_bytes, rb_bytes, table_bytes)
+        rebuilt = recompute(receipt["inputs"]["action"], case_bytes, rb_bytes, table_bytes)
     except (KeyError, ValueError, TypeError, IndexError) as exc:
         problems.append(f"could not recompute the receipt: {exc}")
         return problems
@@ -579,7 +1035,8 @@ def verify(receipt_path: Path, case_path: Path, rulebook_path: Path, impacts_pat
         if ours["findings"] != theirs.get("findings"):
             problems.append("recomputed findings differ from the receipt's findings")
         if ours["impact"] != theirs.get("impact"):
-            problems.append("recomputed impact and error-rate label differ from the receipt's")
+            problems.append("recomputed tax impact differs from the receipt's" if is_tax else
+                            "recomputed impact and error-rate label differ from the receipt's")
         if rebuilt["citations"] != receipt.get("citations"):
             problems.append("recomputed citations differ from the receipt's citations")
         if not problems:
@@ -615,6 +1072,11 @@ def main(argv=None) -> int:
             say(f"- {p}", "  ")
         return 1
     d = receipt["decision"]
+    if receipt["receipt_schema"] == TAX_SCHEMA:
+        say(f"OK   {a.receipt}: recomputed independently, byte-identical. verdict {d['verdict']}, "
+            f"{len(d['findings'])} finding(s), tax impact {d['impact'].get('class', d['impact']['status'])}, "
+            f"receipt_sha256 {receipt['receipt_sha256'][:16]}...")
+        return 0
     label = d["impact"].get("counts_toward_payment_error_rate")
     counted = {True: "counts toward the payment error rate",
                False: "does not count toward the payment error rate"}.get(label, "no error-rate label")

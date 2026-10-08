@@ -1,0 +1,37 @@
+{
+ "fixture": "SUPERSEDED_DOCUMENT",
+ "description": "The extraction step used Box 1 of the taxpayer's original W-2 although a W-2c correcting it is in the file.",
+ "case_file": "fixtures/tax/cases/case_t1.json",
+ "rulebook": "rules/tax_ty2025_form1040.json",
+ "impacts": "impacts/policyengine_tax.json",
+ "expect_verdict": "STOP",
+ "expect_class": "tax_understated",
+ "action": {
+  "action_id": "tax_superseded_document",
+  "action": "prepare_return",
+  "program": "FORM_1040",
+  "tax_year": 2025,
+  "decision_date": "2026-03-10",
+  "fields": [
+   {
+    "name": "wages",
+    "person": "taxpayer",
+    "value": 228000,
+    "document": "W2-1"
+   },
+   {
+    "name": "wages",
+    "person": "spouse",
+    "value": 204000,
+    "document": "W2-2"
+   }
+  ],
+  "numbers": [
+   {
+    "parameter": "standard_deduction",
+    "value": 31500,
+    "source_id": "irs-rev-proc-2025-32"
+   }
+  ]
+ }
+}

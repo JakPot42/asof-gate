@@ -1,0 +1,54 @@
+{
+ "case_id": "TX-3001",
+ "note": "Synthetic return for demonstration. No real person or employer. The names, amounts and dates are invented.",
+ "tax_year": 2025,
+ "filing_status": "joint",
+ "persons": [
+  {
+   "id": "taxpayer",
+   "name": "Filer A",
+   "age": 45
+  },
+  {
+   "id": "spouse",
+   "name": "Filer B",
+   "age": 44
+  }
+ ],
+ "documents": [
+  {
+   "id": "W2-1",
+   "type": "w2",
+   "person": "taxpayer",
+   "payer": "Northfield Analytics (synthetic employer)",
+   "date": "2026-01-22",
+   "tax_year": 2025,
+   "box1_wages": 228000
+  },
+  {
+   "id": "W2-2",
+   "type": "w2",
+   "person": "spouse",
+   "payer": "Lakeshore Clinic Group (synthetic employer)",
+   "date": "2026-01-27",
+   "tax_year": 2025,
+   "box1_wages": 204000
+  },
+  {
+   "id": "W2C-1",
+   "type": "w2c",
+   "person": "taxpayer",
+   "payer": "Northfield Analytics (synthetic employer)",
+   "date": "2026-02-17",
+   "tax_year": 2025,
+   "corrects": "W2-1",
+   "previously_reported": {
+    "box1_wages": 228000
+   },
+   "correct_information": {
+    "box1_wages": 236000
+   },
+   "explanation": "A year-end bonus of 8000 paid in December 2025 was left out of Box 1 on the original form."
+  }
+ ]
+}

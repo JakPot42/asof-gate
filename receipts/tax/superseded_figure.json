@@ -1,0 +1,196 @@
+{
+  "citations": {
+    "authority": {
+      "citation": "26 U.S.C. 63(c)(7), as amended by Public Law 119-21, section 70102",
+      "role": "the statute that sets the amounts; each figure is cited to the page that prints it"
+    },
+    "figures": [
+      {
+        "effective_from": "2025-07-04",
+        "effective_to": "9999-12-31",
+        "enacted_by": {
+          "pdf_page": 88,
+          "section": "section 70102(b) and (c), 139 Stat. 158-159",
+          "sha256": "42f86c3d408bccb1a663c11a51a90d207b3dbc25e689240da51726154be51c8b",
+          "source_id": "public-law-119-21",
+          "states": "Prints $23,625 (PDF page 88) and $15,750 (PDF page 89), for taxable years beginning after December 31, 2024. It does not print $31,500.",
+          "title": "Public Law 119-21, An Act to provide for reconciliation pursuant to title II of H. Con. Res. 14 (July 4, 2025), 139 Stat. 72",
+          "url": "https://www.govinfo.gov/content/pkg/PLAW-119publ21/pdf/PLAW-119publ21.pdf"
+        },
+        "key": "joint",
+        "parameter": "standard_deduction",
+        "pdf_page": 9,
+        "role": "states the figure in force",
+        "section": "section 3.01",
+        "sha256": "e9ada115fb43a4af5ea326ca91edd40ab0bf29b9be01d2c13d7b8fa96214635b",
+        "source_id": "irs-rev-proc-2025-32",
+        "title": "Rev. Proc. 2025-32 (modifies Rev. Proc. 2024-40 for 2025; inflation-adjusted items for 2026)",
+        "url": "https://www.irs.gov/pub/irs-drop/rp-25-32.pdf",
+        "value": 31500
+      }
+    ],
+    "impact_engine": {
+      "name": "policyengine-us",
+      "role": "computed the tax amounts; not used to reach the verdict",
+      "version": "2.24.5"
+    },
+    "superseded_figures": [
+      {
+        "effective_from": "2024-10-22",
+        "effective_to": "2025-07-03",
+        "key": "joint",
+        "parameter": "standard_deduction",
+        "pdf_page": 12,
+        "role": "stated the figure before it was changed",
+        "section": "section 2.15(1)",
+        "sha256": "4de9db6b6662b5c305a59100a027051628823b42fd5817ea4e383ad4c302af1f",
+        "source_id": "irs-rev-proc-2024-40",
+        "title": "Rev. Proc. 2024-40 (inflation-adjusted items for taxable years beginning in 2025)",
+        "url": "https://www.irs.gov/pub/irs-drop/rp-24-40.pdf",
+        "value": 30000
+      }
+    ]
+  },
+  "decision": {
+    "decision_date": "2026-03-10",
+    "findings": [
+      {
+        "decision_date": "2026-03-10",
+        "delta": 1500,
+        "document": "",
+        "enacted_by": {
+          "pdf_page": 88,
+          "section": "section 70102(b) and (c), 139 Stat. 158-159",
+          "source_id": "public-law-119-21"
+        },
+        "entry": -1,
+        "in_force": {
+          "pdf_page": 9,
+          "section": "section 3.01",
+          "source_id": "irs-rev-proc-2025-32"
+        },
+        "in_force_value": 31500,
+        "key": "joint",
+        "kind": "NUMBER_NOT_IN_FORCE",
+        "message": "standard_deduction[joint]: 30000 is present but not in force on 2026-03-10; it was in force 2024-10-22 to 2025-07-03 (irs-rev-proc-2024-40, section 2.15(1), PDF page 12). In force on 2026-03-10: 31500 (irs-rev-proc-2025-32, section 3.01, PDF page 9), enacted by public-law-119-21, section 70102(b) and (c), 139 Stat. 158-159, PDF page 88. Delta +1500. To clear, supply 31500 from a source in force on 2026-03-10.",
+        "reason": "value_out_of_date",
+        "subject": "standard_deduction",
+        "superseded": {
+          "pdf_page": 12,
+          "section": "section 2.15(1)",
+          "source_id": "irs-rev-proc-2024-40"
+        },
+        "supplied_effective_from": "2024-10-22",
+        "supplied_effective_to": "2025-07-03",
+        "supplied_source_id": "irs-rev-proc-2024-40",
+        "supplied_value": 30000
+      }
+    ],
+    "impact": {
+      "class": "tax_overstated",
+      "error": 480,
+      "message": "Federal income tax would be overstated by $480: $85326 as proposed, $84846 on the documents and figures in force.",
+      "proposed": {
+        "income_tax": 85326,
+        "inputs": {
+          "figures": {
+            "standard_deduction": 30000
+          },
+          "filing_status": "joint",
+          "persons": [
+            {
+              "age": 44,
+              "id": "spouse"
+            },
+            {
+              "age": 45,
+              "id": "taxpayer"
+            }
+          ],
+          "tax_year": 2025,
+          "wages": [
+            {
+              "amount": 204000,
+              "person": "spouse"
+            },
+            {
+              "amount": 236000,
+              "person": "taxpayer"
+            }
+          ]
+        },
+        "inputs_sha256": "36eadba19781386719f8850aad9be702405625511c6bc0cb5910229aa6411fc4"
+      },
+      "status": "computed",
+      "supported": {
+        "income_tax": 84846,
+        "inputs": {
+          "figures": {
+            "standard_deduction": 31500
+          },
+          "filing_status": "joint",
+          "persons": [
+            {
+              "age": 44,
+              "id": "spouse"
+            },
+            {
+              "age": 45,
+              "id": "taxpayer"
+            }
+          ],
+          "tax_year": 2025,
+          "wages": [
+            {
+              "amount": 204000,
+              "person": "spouse"
+            },
+            {
+              "amount": 236000,
+              "person": "taxpayer"
+            }
+          ]
+        },
+        "inputs_sha256": "58f7cd2d2eb95c76dd207686bf3aee4d70689222e71a9fb09470b8207c72d15f"
+      }
+    },
+    "verdict": "STOP"
+  },
+  "inputs": {
+    "action": {
+      "action": "prepare_return",
+      "action_id": "tax_superseded_figure",
+      "decision_date": "2026-03-10",
+      "fields": [
+        {
+          "document": "W2C-1",
+          "name": "wages",
+          "person": "taxpayer",
+          "value": 236000
+        },
+        {
+          "document": "W2-2",
+          "name": "wages",
+          "person": "spouse",
+          "value": 204000
+        }
+      ],
+      "numbers": [
+        {
+          "parameter": "standard_deduction",
+          "source_id": "irs-rev-proc-2024-40",
+          "value": 30000
+        }
+      ],
+      "program": "FORM_1040",
+      "tax_year": 2025
+    },
+    "case_file_sha256": "b40faf3a66a093f66abaf78d979ee78cebc41254ee205e84a4bbd1d865ab8e41",
+    "impact_table_sha256": "65906c051336235b636176bbfa76c296d713a6c51ed62ad54c8f1d70945a7039",
+    "rulebook_sha256": "5667250381eb90b291dc147962db35e004cc4136d3f8920aba9ac1e62d5ffc5d"
+  },
+  "receipt_schema": "asof-gate/tax-receipt/1",
+  "receipt_sha256": "b17ecac614c97b54ef9947ae6e11feac784448724ca09301ef05299016c6a538",
+  "rulebook": "form-1040-tax-year-2025",
+  "rulebook_version": "1"
+}
