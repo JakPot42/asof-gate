@@ -168,8 +168,9 @@ children. It is not a sample of real caseloads. Full results are in
   the dates it is in force and the USDA page that states it, and the tolerance.
 - `impacts/policyengine.json` holds the benefit amounts, computed by PolicyEngine and keyed
   by the SHA-256 of the inputs they were computed from.
-- `tools/policyengine_tool.py` fills that table, checks it, and runs the search. It is the
-  only file that needs PolicyEngine.
+- `tools/policyengine_tool.py` fills that table, checks it, and runs the search.
+  `tools/policyengine_tax_tool.py` fills and checks the table for the tax example. They are
+  the only two files that need PolicyEngine.
 
 The figures and their sources:
 
@@ -399,3 +400,10 @@ its hash recomputed, are all rejected.
   fixture.
 - **Not a signature scheme, and no interface.** Receipts are recomputable, not signed. Command
   line only.
+
+## License
+
+The two scripts in `tools/` need PolicyEngine (AGPL-3.0), which is installed separately and is
+not included here. The impact tables in `impacts/` and the amounts in the receipts are
+PolicyEngine results. The five PDFs in `sources/` are government documents, included unchanged
+for reference.
