@@ -7,6 +7,13 @@ caught is the kind that counts toward a State's SNAP payment error rate.
 
 ![Terminal demo, about one minute, on a synthetic case. It shows a pay stub with regular pay of 1000 and a one-time bonus of 600. The gate is given a monthly income of 2795, which counts the bonus as regular pay, and stops: the pay stubs give 2150, an underpayment of $154 a month that counts toward the payment error rate. A second case attributes a student's pay stubs to the parent, and the gate stops it as a wrongful denial of $510 a month that does not count toward the payment error rate. The independent verifier then accepts the real receipt and rejects a forged copy whose label was changed to "does not count".](demo/asof-gate.gif)
 
+The recording ends with the verifier's verdict on the copy whose label was changed:
+
+```
+FAIL forged_label.json
+  - recomputed impact and error-rate label differ from the receipt's
+```
+
 The script is `demo/asof-gate.tape`, rendered with [VHS](https://github.com/charmbracelet/vhs)
 from a fresh clone of this repository. Every command on screen is real and its output is
 shown as produced, cut to four lines by the `head -4` you can see. The households are
