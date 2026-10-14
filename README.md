@@ -407,3 +407,6 @@ The two scripts in `tools/` need PolicyEngine (AGPL-3.0), which is installed sep
 not included here. The impact tables in `impacts/` and the amounts in the receipts are
 PolicyEngine results. The five PDFs in `sources/` are government documents, included unchanged
 for reference.
+
+The MIT licence in `LICENSE` also covers the code at the git tag `v1`, which was published before
+the licence file was added.
